@@ -1,0 +1,37 @@
+realm: atmos
+indicators:
+  tg_mean:
+    base: tg_mean
+    parameters:
+      freq: YS # will be read as YS-JAN
+  tx_max:
+    base: tx_max
+    parameters:
+      freq: YS
+  prcptot:
+    base: prcptot
+    parameters:
+      freq: YS
+  rx1day:
+    base: max_n_day_precipitation_amount
+    parameters:
+      freq: YS
+  # in lafferty, the annual number of extremely hot days (deﬁned as daily maximum temperature exceeding the local historical 99th percentile),
+  # i decided to not do this for now
+  tx_30:
+    base: tx_days_above
+    parameters:
+      thresh: 30 degC
+      freq: YS
+  dry_days:
+    base: dry_days
+    parameters:
+      thresh: 1 mm/day
+      freq: YS
+  #in lafferty, the annual number ofextremely wet days (daily precipitation exceeding the local historical 99th percentile).
+  # i decided to not do this for now
+  r20mm:
+    base: wetdays
+    parameters:
+      thresh: 20 mm/day
+      freq: YS

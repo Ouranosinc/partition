@@ -1,0 +1,81 @@
+# config  for partition project
+dask:
+    client:
+        dashboard_address: 6786
+
+project_catalog:
+    project:
+        title: partition_cat
+        description: partition_cat
+
+
+extract:
+    search_data_catalogs:
+        variables_and_freqs:
+            tas: D
+            tasmax: D
+            tasmin: D
+            pr: D
+        allow_conversion: True
+        match_hist_and_fut: True
+        periods:
+            - 1956
+            - 2100
+#        exclusions:
+#            id:
+#             - NEX-GDDP-CMIP6_CMIP6_ScenarioMIP_KIOST_KIOST-ESM_ssp245_r1i1p1f1_QC # time is broken
+        restrict_members:
+            ordered: 1
+        other_search_criteria:
+            processing_level: biasadjusted
+            bias_adjust_project:
+                - CanDCS-U6 # cheat because we want to use the zarr version in other cat.
+                - CanDCS-M6
+                - ESPO-G6-R2
+                - ESPO-G6-E5L
+                - IC6-R2
+                - IC6-E5L
+                - IC6-EM
+                - NEX-GDDP-CMIP6
+#            member:
+#                - r1i1p1f1
+#                - r1i1p1f2
+#                - r1i1p1f3
+    extract_dataset:
+        region:
+            name: QC
+            method: bbox
+            lon_bnds: [ -83, -55 ]
+            lat_bnds: [ 42, 63 ]
+#        xr_combine_kwargs:
+#            combine_attrs: override
+        xr_open_kwargs:
+            drop_variables:
+                - height
+                - bnds
+                - time_bnds
+                - lat_bnds
+                - lon_bnds
+            #chunks: ??
+
+regrid:
+    regrid_dataset:
+        regridder_kwargs:
+            method: bilinear
+            extrap_method: inverse_dist
+            output_chunks:
+                lat: 50
+                lon: 50
+                time: -1
+
+io:
+    save_to_zarr:
+        rechunk:
+            time: -1
+            X: 50
+            Y: 50
+        mode: o
+
+tdd:
+  xarray_open_kwargs:
+    decode_timedelta: False
