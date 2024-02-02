@@ -43,12 +43,12 @@ if __name__ == '__main__':
 
 
         for id, ds in dict_input.items():
-            pcat = xs.ProjectCatalog(CONFIG['project_catalog']['path'])
-            if not pcat.exists_in_cat(id=id,domain='QC-reg1',
-                                      processing_level="indicators",):
-                logger.info('Regrid %s', id)
+            var = list(ds.data_vars)[0]
+            if not pcat.exists_in_cat(id=id.split('.')[0],domain='QC-reg1',
+                                      variable=var, processing_level="indicators",):
+                logger.info(f'Regrid {id} {var}')
 
-                out = xs.regrid_dataset( ds=ds, ds_grid= ds_grid,
+                out = xs.regrid_dataset( ds=ds[[var]], ds_grid= ds_grid,
                                          to_level=ds.attrs['cat:processing_level']  )
 
                 out.attrs['cat:domain'] = 'QC-reg1'
