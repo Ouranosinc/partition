@@ -1,7 +1,4 @@
 # config  for partition project
-dask:
-    client:
-        dashboard_address: 6786
 
 project_catalog:
     project:
@@ -36,6 +33,7 @@ extract:
                 - IC6-R2
                 - IC6-E5L
                 - IC6-EM
+                - IC6-PB
                 - NEX-GDDP-CMIP6
 #            member:
 #                - r1i1p1f1
