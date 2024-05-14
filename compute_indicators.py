@@ -14,7 +14,7 @@ path = 'config/path_part.yml'
 config = 'config/config_part.yml'
 from xscen import CONFIG
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
-logger = logging.getLogger('xscen')
+#logger = logging.getLogger('xscen')
 
 if __name__ == '__main__':
     daskkws = CONFIG['dask'].get('client', {})
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
             if not pcat.exists_in_cat(id=id,variable='r20mm',xrfreq='YS-JAN',
                                       processing_level="indicators",):
-                logger.info('Computing indicators for %s', id)
+                print('Computing indicators for ', id)
 
                 ds_ext = xs.extract_dataset(catalog=dc, )['D']
                 ds_ext = ds_ext.chunk(

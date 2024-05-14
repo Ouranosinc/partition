@@ -24,16 +24,28 @@ extract:
         restrict_members:
             ordered: 1
         other_search_criteria:
-            processing_level: biasadjusted
+            processing_level:
+                - biasadjusted
+            source:
+                - ACCESS-ESM1-5
+                - CanESM5
+                - EC-Earth3
+                - FGOALS-g3
+                - IPSL-CM6A-LR
+                - KACE-1-0-G
+                - MIROC6
+                - MRI-ESM2-0
             bias_adjust_project:
                 - CanDCS-U6 # cheat because we want to use the zarr version in other cat.
                 - CanDCS-M6
                 - ESPO-G6-R2
                 - ESPO-G6-E5L
+                - ESPO-G6-PB
                 - IC6-R2
                 - IC6-E5L
                 - IC6-EM
                 - IC6-PB
+                - IC6-N2014
                 - NEX-GDDP-CMIP6
 #            member:
 #                - r1i1p1f1
@@ -45,8 +57,8 @@ extract:
             method: bbox
             lon_bnds: [ -83, -55 ]
             lat_bnds: [ 42, 63 ]
-#        xr_combine_kwargs:
-#            combine_attrs: override
+        xr_combine_kwargs:
+            combine_attrs: override
         xr_open_kwargs:
             drop_variables:
                 - height
