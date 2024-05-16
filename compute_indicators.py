@@ -27,6 +27,7 @@ if __name__ == '__main__':
     )
 
     with Client(n_workers=3, threads_per_worker=5, memory_limit="8GB",**daskkws):
+    #with Client(n_workers=2, threads_per_worker=3, memory_limit="15GB", **daskkws):
 
         dict_sim = xs.search_data_catalogs()
 
@@ -38,9 +39,9 @@ if __name__ == '__main__':
                                       processing_level="indicators",):
                 print('Computing indicators for ', id)
 
-                ds_ext = xs.extract_dataset(catalog=dc, )['D']
-                ds_ext = ds_ext.chunk(
-                    {'rlat': 50, 'rlon': 50} if 'R2' in id else {'lat': 50, 'lon': 50})
+                chunks={'rlat': 50, 'rlon': 50, 'time':1460} if 'R2' in id else {'lat': 50, 'lon': 50, 'time':1460}
+                ds_ext = xs.extract_dataset(catalog=dc,
+                                            xr_open_kwargs={'chunks':chunks})['D']
 
                 for name, ind in mod.iter_indicators():
                     # Get the frequency and variable names to check if they are already computed

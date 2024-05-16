@@ -47,6 +47,10 @@ extract:
                 - IC6-PB
                 - IC6-N2014
                 - NEX-GDDP-CMIP6
+                - MBCn-E5L
+                - MBCn-R2
+                - BCCAQv2-E5L
+                - BCCAQv2-R2
 #            member:
 #                - r1i1p1f1
 #                - r1i1p1f2

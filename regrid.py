@@ -75,6 +75,10 @@ if __name__ == '__main__':
                 return 'MBCn'
             elif 'NEX' in row['bias_adjust_project']:
                 return 'NEX-GDDP'
+            elif 'MBCn' in row['bias_adjust_project']:
+                return 'MBCn'
+            elif 'BCCAQv2' in row['bias_adjust_project']:
+                return 'BCCAQv2'
 
 
         def add_reference(row):
