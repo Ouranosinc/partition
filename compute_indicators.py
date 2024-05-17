@@ -38,10 +38,33 @@ if __name__ == '__main__':
             if not pcat.exists_in_cat(id=id,variable='r20mm',xrfreq='YS-JAN',
                                       processing_level="indicators",):
                 print('Computing indicators for ', id)
-
                 chunks={'rlat': 50, 'rlon': 50, 'time':1460} if 'R2' in id else {'lat': 50, 'lon': 50, 'time':1460}
-                ds_ext = xs.extract_dataset(catalog=dc,
-                                            xr_open_kwargs={'chunks':chunks})['D']
+
+
+                # PCIC R2 data don't have lat and lon coords. Need to fix it.
+                if 'MBCn-R2' in id or 'BCCAQv2-R2' in id:
+                    ds_ext = xs.extract_dataset(catalog=dc,
+                                                xr_open_kwargs={'chunks': chunks})['D']
+
+                    template=pcat.search(bias_adjust_project='ESPO-G6-R2',
+                                         variable='tg_mean', source='MIROC6',
+                                         experiment='ssp126', domain='QC').to_dataset()
+
+                    if template.rlat.drop_vars('rotated_pole').equals(ds_ext.rlat) and template.rlon.drop_vars('rotated_pole').equals(ds_ext.rlon):
+                        ds_ext['rlat']=template['rlat']
+                        ds_ext['rlon'] = template['rlon']
+                        ds_ext=ds_ext.assign_coords(
+                            {"lon": (('rlat', 'rlon'), template['lon'].data)})
+                        ds_ext = ds_ext.assign_coords(
+                            {"lat": (('rlat', 'rlon'), template['lat'].data)})
+                        ds_ext['lat'].attrs=template['lat'].attrs
+                        ds_ext['lon'].attrs = template['lon'].attrs
+                    else:
+                        print('rlat and rlon of template are not the same as the extracted dataset.')
+                else:
+                    ds_ext = xs.extract_dataset(catalog=dc,
+                                                region=CONFIG['region'],
+                                                xr_open_kwargs={'chunks':chunks})['D']
 
                 for name, ind in mod.iter_indicators():
                     # Get the frequency and variable names to check if they are already computed

@@ -56,11 +56,11 @@ extract:
 #                - r1i1p1f2
 #                - r1i1p1f3
     extract_dataset:
-        region:
-            name: QC
-            method: bbox
-            lon_bnds: [ -83, -55 ]
-            lat_bnds: [ 42, 63 ]
+#        region: # can't pass it directly bc of PCIC R2 lacking lat and lon
+#            name: QC
+#            method: bbox
+#            lon_bnds: [ -83, -55 ]
+#            lat_bnds: [ 42, 63 ]
         xr_combine_kwargs:
             combine_attrs: override
         xr_open_kwargs:
@@ -71,6 +71,12 @@ extract:
                 - lat_bnds
                 - lon_bnds
             #chunks: ??
+
+region:
+    name: QC
+    method: bbox
+    lon_bnds: [ -83, -55 ]
+    lat_bnds: [ 42, 63 ]
 
 regrid:
     regrid_dataset:
