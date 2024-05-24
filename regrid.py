@@ -16,6 +16,43 @@ from xscen import CONFIG
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
 logger = logging.getLogger('xscen')
 
+
+
+def add_method(row):
+    if 'ESPO-G6' in row['bias_adjust_project']:
+        return 'ESPO-G6'
+    elif 'IC6' in row['bias_adjust_project']:
+        return 'IC6'
+    elif 'CanDCS-U6' in row['bias_adjust_project']:
+        return 'BCCAQv2'
+    elif 'CanDCS-M6' in row['bias_adjust_project']:
+        return 'MBCn'
+    elif 'NEX' in row['bias_adjust_project']:
+        return 'NEX-GDDP'
+    elif 'MBCn' in row['bias_adjust_project']:
+        return 'MBCn'
+    elif 'BCCAQv2' in row['bias_adjust_project']:
+        return 'BCCAQv2'
+
+
+def add_reference(row):
+    if 'R2' in row['bias_adjust_project']:
+        return 'CaSRv2.1'
+    elif 'E5L' in row['bias_adjust_project']:
+        return 'ERA5-Land'
+    elif 'EM' in row['bias_adjust_project']:
+        return 'EMDNA'
+    elif 'CanDCS-M6' in row['bias_adjust_project']:
+        return 'PCICBlend'
+    elif 'PB' in row['bias_adjust_project']:
+        return 'PCICBlend'
+    elif 'CanDCS-U6' in row['bias_adjust_project']:
+        return 'NRCANmet'
+    elif 'N2014' in row['bias_adjust_project']:
+        return 'NRCANmet'
+    elif 'NEX' in row['bias_adjust_project']:
+        return 'GMFD'
+
 if __name__ == '__main__':
     daskkws = CONFIG['dask'].get('client', {})
     tdd = CONFIG['tdd']
@@ -53,6 +90,9 @@ if __name__ == '__main__':
 
                 out.attrs['cat:domain'] = 'QC-reg1'
 
+                #drop vestigial coords
+                out = out.drop_vars('rotated_pole', errors='ignore')
+
                 # for cf
                 out.lat.attrs['axis'] = 'Y'
                 out.lon.attrs['axis'] = 'X'
@@ -62,44 +102,7 @@ if __name__ == '__main__':
                                    path=CONFIG['paths']['indicators'],
                                    )
 
-
         # add reference and method to the catalog
-        def add_method(row):
-            if 'ESPO-G6' in row['bias_adjust_project']:
-                return 'ESPO-G6'
-            elif 'IC6' in row['bias_adjust_project']:
-                return 'IC6'
-            elif 'CanDCS-U6' in row['bias_adjust_project']:
-                return 'BCCAQv2'
-            elif 'CanDCS-M6' in row['bias_adjust_project']:
-                return 'MBCn'
-            elif 'NEX' in row['bias_adjust_project']:
-                return 'NEX-GDDP'
-            elif 'MBCn' in row['bias_adjust_project']:
-                return 'MBCn'
-            elif 'BCCAQv2' in row['bias_adjust_project']:
-                return 'BCCAQv2'
-
-
-        def add_reference(row):
-            if 'R2' in row['bias_adjust_project']:
-                return 'CaSRv2.1'
-            elif 'E5L' in row['bias_adjust_project']:
-                return 'ERA5-Land'
-            elif 'EM' in row['bias_adjust_project']:
-                return 'EMDNA'
-            elif 'CanDCS-M6' in row['bias_adjust_project']:
-                return 'PCICBlend'
-            elif 'PB' in row['bias_adjust_project']:
-                return 'PCICBlend'
-            elif 'CanDCS-U6' in row['bias_adjust_project']:
-                return 'NRCANmet'
-            elif 'N2014' in row['bias_adjust_project']:
-                return 'NRCANmet'
-            elif 'NEX' in row['bias_adjust_project']:
-                return 'GMFD'
-
-
         df = pcat.df.copy()
         pcat.df['method'] = df.apply(add_method, axis=1)
         pcat.df['reference'] = df.apply(add_reference, axis=1)
