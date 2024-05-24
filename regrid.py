@@ -8,6 +8,7 @@ from dask.distributed import Client
 import dask
 dask.config.set({'logging.distributed.worker': 'error'})
 import xarray as xr
+import numpy as np
 import xesmf
 import logging
 path = 'config/path_part.yml'
@@ -17,41 +18,18 @@ xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
 logger = logging.getLogger('xscen')
 
 
+def add_col(row, d):
+    """"
+    Add a column based on the bias_adjust_project column and a dictionary of translations.
+    """
+    if not isinstance(row['bias_adjust_project'], str):
+        return np.nan
 
-def add_method(row):
-    if 'ESPO-G6' in row['bias_adjust_project']:
-        return 'ESPO-G6'
-    elif 'IC6' in row['bias_adjust_project']:
-        return 'IC6'
-    elif 'CanDCS-U6' in row['bias_adjust_project']:
-        return 'BCCAQv2'
-    elif 'CanDCS-M6' in row['bias_adjust_project']:
-        return 'MBCn'
-    elif 'NEX' in row['bias_adjust_project']:
-        return 'NEX-GDDP'
-    elif 'MBCn' in row['bias_adjust_project']:
-        return 'MBCn'
-    elif 'BCCAQv2' in row['bias_adjust_project']:
-        return 'BCCAQv2'
+    for k,v in d.items():
+        if k in row['bias_adjust_project']:
+            return v
 
 
-def add_reference(row):
-    if 'R2' in row['bias_adjust_project']:
-        return 'CaSRv2.1'
-    elif 'E5L' in row['bias_adjust_project']:
-        return 'ERA5-Land'
-    elif 'EM' in row['bias_adjust_project']:
-        return 'EMDNA'
-    elif 'CanDCS-M6' in row['bias_adjust_project']:
-        return 'PCICBlend'
-    elif 'PB' in row['bias_adjust_project']:
-        return 'PCICBlend'
-    elif 'CanDCS-U6' in row['bias_adjust_project']:
-        return 'NRCANmet'
-    elif 'N2014' in row['bias_adjust_project']:
-        return 'NRCANmet'
-    elif 'NEX' in row['bias_adjust_project']:
-        return 'GMFD'
 
 if __name__ == '__main__':
     daskkws = CONFIG['dask'].get('client', {})
@@ -104,6 +82,22 @@ if __name__ == '__main__':
 
         # add reference and method to the catalog
         df = pcat.df.copy()
-        pcat.df['method'] = df.apply(add_method, axis=1)
-        pcat.df['reference'] = df.apply(add_reference, axis=1)
+        pcat.df['method'] = df.apply(add_col, axis=1,
+                                     d={'ESPO-G6': 'ESPO-G6',
+                                       'IC6': 'IC6',
+                                       'CanDCS-U6': 'BCCAQv2',
+                                       'CanDCS-M6': 'MBCn',
+                                       'NEX': 'NEX-GDDP',
+                                       'MBCn': 'MBCn',
+                                       'BCCAQv2': 'BCCAQv2'})
+        pcat.df['reference'] = df.apply(add_col, axis=1,
+                                        d={'R2': 'CaSRv2.1',
+                                           'E5L': 'ERA5-Land',
+                                           'EM': 'EMDNA',
+                                           'CanDCS-M6': 'PCICBlend',
+                                           'PB': 'PCICBlend',
+                                           'CanDCS-U6': 'NRCANmet',
+                                           'N2014': 'NRCANmet',
+                                           'NEX': 'GMFD'})
         pcat.update()
+
