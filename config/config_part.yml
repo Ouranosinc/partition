@@ -100,7 +100,7 @@ gridpoints:
         name: mtl
         method: gridpoint
         lat: [45.5]
-        lon: [=73.6]
+        lon: [73.6]
 
 io:
     save_to_zarr:
