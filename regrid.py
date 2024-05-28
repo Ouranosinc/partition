@@ -78,6 +78,8 @@ if __name__ == '__main__':
                 xs.save_and_update(ds=out,
                                    pcat=pcat,
                                    path=CONFIG['paths']['indicators'],
+                                   save_kwargs=dict(
+                                       rechunk={'time': -1, 'X': 50, 'Y': 50})
                                    )
 
         # add reference and method to the catalog

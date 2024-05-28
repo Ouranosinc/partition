@@ -107,6 +107,7 @@ if __name__ == '__main__':
                         xs.save_and_update(ds=ds_ind,
                                            pcat=pcat,
                                            path=CONFIG['paths']['indicators'],
+                                           save_kwargs=dict(rechunk={'time':-1, 'X':50, 'Y':50})
                                            )
 
 

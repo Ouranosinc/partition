@@ -5,6 +5,21 @@ project_catalog:
         title: partition_cat
         description: partition_cat
 
+source: &source
+    - ACCESS-ESM1-5
+    - CanESM5
+    - EC-Earth3
+    - FGOALS-g3
+    - IPSL-CM6A-LR
+    - KACE-1-0-G
+    - MIROC6
+    - MRI-ESM2-0
+
+reference:
+    - CaSRv2.1
+    - ERA5-Land
+    - PCICBlend
+    - NRCANmet
 
 extract:
     search_data_catalogs:
@@ -26,15 +41,7 @@ extract:
         other_search_criteria:
             processing_level:
                 - biasadjusted
-            source:
-                - ACCESS-ESM1-5
-                - CanESM5
-                - EC-Earth3
-                - FGOALS-g3
-                - IPSL-CM6A-LR
-                - KACE-1-0-G
-                - MIROC6
-                - MRI-ESM2-0
+            source: *source
             bias_adjust_project:
                 - CanDCS-U6 # cheat because we want to use the zarr version in other cat.
                 - CanDCS-M6
@@ -90,10 +97,6 @@ regrid:
 
 io:
     save_to_zarr:
-        rechunk:
-            time: -1
-            X: 50
-            Y: 50
         mode: o
 
 tdd:
