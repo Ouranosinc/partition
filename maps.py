@@ -7,10 +7,6 @@ import xscen as xs
 from dask.distributed import Client
 import dask
 dask.config.set({'logging.distributed.worker': 'error'})
-import xarray as xr
-import numpy as np
-import copy
-import xesmf
 import xclim as xc
 import logging
 path = 'config/path_part.yml'

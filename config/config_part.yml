@@ -95,6 +95,13 @@ regrid:
                 lon: 50
                 time: -1
 
+gridpoints:
+    mtl:
+        name: mtl
+        method: gridpoint
+        lat: [45.5]
+        lon: [=73.6]
+
 io:
     save_to_zarr:
         mode: o
