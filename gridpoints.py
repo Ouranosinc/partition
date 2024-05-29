@@ -31,7 +31,7 @@ if __name__ == '__main__':
     with Client(n_workers=2, threads_per_worker=5, memory_limit="30GB",**daskkws):
 
         # extract QC
-        subcat = pcat.search(processing_level='indicators',
+        datasets = pcat.search(processing_level='indicators',
                              domain='QC',
                              source=CONFIG['source'],
                              reference=CONFIG['reference']).to_dataset_dict(**CONFIG['tdd'])
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
             # build partition input
             ens_part = xs.ensembles.build_partition_data(
-                subcat,
+                datasets,
                 partition_dim=["source", "experiment", "method", 'reference'],
                 subset_kw=point,
                 to_level="partition-ensemble84"
@@ -51,11 +51,13 @@ if __name__ == '__main__':
                 if not pcat.exists_in_cat(processing_level="uncertainties84",
                                           variable=var, domain=point_name):
 
+                    #compute uncertainties per category
                     mean, uncertainties = xc.ensembles.general_partition(ens_part[var])
                     uncertainties = uncertainties.to_dataset(name=var)
                     uncertainties.attrs = ens_part.attrs
                     uncertainties.attrs['cat:processing_level'] = "uncertainties84"
                     uncertainties.attrs['cat:variable'] = var
+                    # save
                     xs.save_and_update(ds=uncertainties,
                                        pcat=pcat,
                                        path=CONFIG['paths']['output'],

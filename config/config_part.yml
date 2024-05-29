@@ -88,8 +88,9 @@ region:
 regrid:
     regrid_dataset:
         regridder_kwargs:
-            method: bilinear
-            extrap_method: inverse_dist
+            method: conservative_normed #bilinear used for regrid QC-reg1
+            unmapped_to_nan: True
+            #extrap_method: inverse_dist
             output_chunks:
                 lat: 50
                 lon: 50
@@ -100,7 +101,7 @@ gridpoints:
         name: mtl
         method: gridpoint
         lat: [45.5]
-        lon: [73.6]
+        lon: [-73.6]
 
 io:
     save_to_zarr:

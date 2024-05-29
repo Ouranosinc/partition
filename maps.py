@@ -59,7 +59,8 @@ if __name__ == '__main__':
 
 
 
-        for var in ens_part.data_vars:
+        #for var in ens_part.data_vars:
+        for var in ['r20mm']:
             if not pcat.exists_in_cat(processing_level="uncertainties84", variable=var,
                                       domain='QC-reg1'):
                 print(f"Computing uncertainties84 {var}")
