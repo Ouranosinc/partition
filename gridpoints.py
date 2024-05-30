@@ -5,21 +5,22 @@ if 'ESMFMKFILE' not in os.environ:
     os.environ['ESMFMKFILE'] = str(Path(os.__file__).parent.parent / 'esmf.mk')
 import xscen as xs
 from dask.distributed import Client
-import dask
-dask.config.set({'logging.distributed.worker': 'error'})
 import xclim as xc
 import logging
+from xscen import CONFIG
+import atexit
+
 path = 'config/path_part.yml'
 config = 'config/config_part.yml'
-from xscen import CONFIG
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
 logger = logging.getLogger('xscen')
 
 # choices
-ens_name = '84'
+ens_name = CONFIG['ens_name']
 domain = 'QC'
 
 if __name__ == '__main__':
+    atexit.register(xs.send_mail_on_exit, subject=CONFIG['scripting']['subject'])
     daskkws = CONFIG['dask'].get('client', {})
 
     # create project catalog

@@ -6,20 +6,26 @@ if 'ESMFMKFILE' not in os.environ:
 import xscen as xs
 from dask.distributed import Client
 import dask
-dask.config.set({'logging.distributed.worker': 'error'})
 import xarray as xr
 import numpy as np
 import xesmf
 import logging
+from xscen import CONFIG
+import atexit
+
 path = 'config/path_part.yml'
 config = 'config/config_part.yml'
-from xscen import CONFIG
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
 logger = logging.getLogger('xscen')
+dask.config.set({'logging.distributed.worker': 'error'})
+
+# choices
+domain = 'QC-reg1c'
+ens_name = '73'
 
 
 def add_col(row, d):
-    """"
+    """
     Add a column based on the bias_adjust_project column and a dictionary of translations.
     """
     if not isinstance(row['bias_adjust_project'], str):
@@ -30,8 +36,8 @@ def add_col(row, d):
             return v
 
 
-
 if __name__ == '__main__':
+    atexit.register(xs.send_mail_on_exit, subject=CONFIG['scripting']['subject'])
     daskkws = CONFIG['dask'].get('client', {})
     tdd = CONFIG['tdd']
 
@@ -45,27 +51,11 @@ if __name__ == '__main__':
     # add reference and method to the catalog
     # this could have been done in indicators.py, but I thought of it too late.
     df = pcat.df.copy()
-    pcat.df['method'] = df.apply(add_col, axis=1,
-                                 d={'ESPO-G6': 'ESPO-G6',
-                                    'IC6': 'IC6',
-                                    'CanDCS-U6': 'BCCAQv2',
-                                    'CanDCS-M6': 'MBCn',
-                                    'NEX': 'NEX-GDDP',
-                                    'MBCn': 'MBCn',
-                                    'BCCAQv2': 'BCCAQv2'})
-    pcat.df['reference'] = df.apply(add_col, axis=1,
-                                    d={'R2': 'CaSRv2.1',
-                                       'E5L': 'ERA5-Land',
-                                       'EM': 'EMDNA',
-                                       'CanDCS-M6': 'PCICBlend',
-                                       'PB': 'PCICBlend',
-                                       'CanDCS-U6': 'NRCANmet',
-                                       'N2014': 'NRCANmet',
-                                       'NEX': 'GMFD'})
+    pcat.df['method'] = df.apply(add_col, axis=1, d=CONFIG['translate']['method'])
+    pcat.df['reference'] = df.apply(add_col, axis=1, d=CONFIG['translate']['reference'])
     pcat.update()
 
-    with Client(n_workers=3, threads_per_worker=5, memory_limit="8GB",**daskkws):
-        domain ='QC-reg1c'
+    with Client(n_workers=3, threads_per_worker=5, memory_limit="8GB", **daskkws):
 
         # create regular grid
         ds_grid = xesmf.util.cf_grid_2d(-83, -55, 0.1, 42, 63, 0.1)
@@ -78,9 +68,8 @@ if __name__ == '__main__':
 
         # load input
         dict_input = pcat.search(processing_level="indicators",
-                                 source=CONFIG['source'],
-                                 reference=CONFIG['reference'],
-                                 domain='QC').to_dataset_dict(**tdd)
+                                 domain='QC',
+                                 **CONFIG['ensemble'][ens_name]).to_dataset_dict(**tdd)
 
         for id, ds in dict_input.items():
             var = list(ds.data_vars)[0]
@@ -89,7 +78,7 @@ if __name__ == '__main__':
                 print(f'Regrid {domain} {id} {var}')
 
                 out = xs.regrid_dataset( ds=ds[[var]], ds_grid= ds_grid,
-                                         to_level=ds.attrs['cat:processing_level']  )
+                                         to_level=ds.attrs['cat:processing_level'])
 
                 out.attrs['cat:domain'] = domain
 
@@ -100,7 +89,7 @@ if __name__ == '__main__':
                 out.lat.attrs['axis'] = 'Y'
                 out.lon.attrs['axis'] = 'X'
 
-                out = out.drop_vars(['lat_bounds','lon_bounds'], errors='ignore')
+                out = out.drop_vars(['lat_bounds', 'lon_bounds'], errors='ignore')
 
                 xs.save_and_update(ds=out,
                                    pcat=pcat,

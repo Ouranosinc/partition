@@ -5,11 +5,9 @@ if 'ESMFMKFILE' not in os.environ:
     os.environ['ESMFMKFILE'] = str(Path(os.__file__).parent.parent / 'esmf.mk')
 import xscen as xs
 from dask.distributed import Client
-# from dask import config as dskconf
-import dask
-dask.config.set({'logging.distributed.worker': 'error'})
+import atexit
 import xarray as xr
-import logging
+
 path = 'config/path_part.yml'
 config = 'config/config_part.yml'
 from xscen import CONFIG
@@ -17,6 +15,7 @@ xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
 
 if __name__ == '__main__':
     daskkws = CONFIG['dask'].get('client', {})
+    atexit.register(xs.send_mail_on_exit, subject=CONFIG['scripting']['subject'])
 
     # create project catalog
     pcat = xs.ProjectCatalog(
@@ -31,16 +30,16 @@ if __name__ == '__main__':
 
         mod = xs.indicators.load_xclim_module(CONFIG["indicators"]["module"])
 
-        for id, dc in dict_sim.items():
-
-            if not pcat.exists_in_cat(id=id, variable='r20mm', xrfreq='YS-JAN',
+        for did, dc in dict_sim.items():
+            *_, last = mod.iter_indicators()
+            if not pcat.exists_in_cat(id=did, variable=last[0], xrfreq='YS-JAN',
                                       processing_level="indicators",):
-                print('Computing indicators for ', id)
-                chunks = {'rlat': 50, 'rlon': 50, 'time': 1460} if 'R2' in id else {
+                print('Computing indicators for ', did)
+                chunks = {'rlat': 50, 'rlon': 50, 'time': 1460} if 'R2' in did else {
                     'lat': 50, 'lon': 50, 'time': 1460}
 
                 # PCIC R2 data don't have lat and lon coords. Need to fix it.
-                if 'MBCn-R2' in id or 'BCCAQv2-R2' in id:
+                if 'MBCn-R2' in did or 'BCCAQv2-R2' in did:
                     ds_ext = xs.extract_dataset(catalog=dc,
                                                 xr_open_kwargs={'chunks': chunks})['D']
 
@@ -63,13 +62,14 @@ if __name__ == '__main__':
                 else:
                     ds_ext = xs.extract_dataset(catalog=dc,
                                                 region=CONFIG['region'],
-                                                xr_open_kwargs={'chunks':chunks})['D']
+                                                xr_open_kwargs={'chunks': chunks})['D']
 
                 for name, ind in mod.iter_indicators():
                     # Get the freq and var names to check if they are already computed
-                    outfreq = ind.injected_parameters["freq"].replace('YS','YS-JAN')
+                    outfreq = ind.injected_parameters.get("freq", 'YS-JAN'
+                                                          ).replace('YS', 'YS-JAN')
                     outnames = [cfatt["var_name"] for cfatt in ind.cf_attrs]
-                    if not pcat.exists_in_cat(id=id.replace('CanDCS-U6z','CanDCS-U6'),
+                    if not pcat.exists_in_cat(id=did,
                                               variable=outnames,xrfreq=outfreq,
                                               processing_level="indicators", ):
 
@@ -83,7 +83,7 @@ if __name__ == '__main__':
                             if c in ds_ind.dims:
                                 ds_ind[c].attrs['axis'] = 'X'
 
-                        for c in ['rlat','lat']:
+                        for c in ['rlat', 'lat']:
                             if c in ds_ind.dims:
                                 ds_ind[c].attrs['axis'] = 'Y'
 
@@ -93,7 +93,7 @@ if __name__ == '__main__':
 
                         # put all on same type of time index
                         if isinstance(ds_ind.indexes['time'], xr.CFTimeIndex):
-                            ds_ind['time']= ds_ind.indexes['time'].to_datetimeindex()
+                            ds_ind['time'] = ds_ind.indexes['time'].to_datetimeindex()
 
                         # fix xrfreq bc weird behavior in between changes in pandas
                         ds_ind.attrs['cat:xrfreq'] = 'YS-JAN'

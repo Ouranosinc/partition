@@ -3,6 +3,6 @@
 0. create_ic6_input_cat.ipynb (private)
 1. indicators.py
 2. build_mask.py
-2. regrid.py
-3. maps.py
+3. regrid.py
 4. gridpoints.py
+5. maps.py

@@ -1,5 +1,7 @@
 # config  for partition project
 
+ens_name: 73
+
 project_catalog:
     project:
         title: partition_cat
@@ -101,6 +103,7 @@ gridpoints:
         lon: [-71.1]
 
 
+
 ensembles:
     84:
         source:
@@ -151,6 +154,25 @@ ensembles:
             - ssp370
             - ssp585
 
+translate:
+    method:
+        ESPO-G6: ESPO-G6
+        IC6: IC6
+        CanDCS-U6: BCCAQv2
+        CanDCS-M6: MBCn
+        NEX: NEX-GDDP
+        MBCn: MBCn
+        BCCAQv2: BCCAQv2
+    reference:
+        R2: CaSRv2.1
+        E5L: ERA5-Land
+        EM: EMDNA
+        CanDCS-M6: PCICBlend
+        PB: PCICBlend
+        CanDCS-U6: NRCANmet
+        N2014: NRCANmet
+        NEX: GMFD
+
 io:
     save_to_zarr:
         mode: o
@@ -158,3 +180,10 @@ io:
 tdd:
   xarray_open_kwargs:
     decode_timedelta: False
+
+scripting:
+    subject: Partition
+    send_mail_on_exit:
+        msg_ok: Toutes les étapes demandées ont été complétées.
+        msg_err: Une erreur est survenue durant le traitement.
+        #on_error_only: True
