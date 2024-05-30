@@ -29,9 +29,20 @@ indicators:
       thresh: 1 mm/day
       freq: YS
   #in lafferty, the annual number ofextremely wet days (daily precipitation exceeding the local historical 99th percentile).
-  # i decided to not do this for now
+  # I decided to not do this for now
   r20mm:
     base: wetdays
     parameters:
       thresh: 20 mm/day
       freq: YS
+  #multivariate
+  dlyfrzthw:
+    base: dlyfrzthw
+    parameters:
+      freq: YS
+  heat_wave_total_length:
+    base: heat_wave_total_length
+    parameters:
+      freq: YS
+  water_budget:
+    base: water_budget

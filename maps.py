@@ -15,7 +15,9 @@ from xscen import CONFIG
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
 logger = logging.getLogger('xscen')
 
-
+# choices
+ens_name = '84'
+domain = 'QC-reg1c'
 
 
 if __name__ == '__main__':
@@ -28,54 +30,52 @@ if __name__ == '__main__':
         project=CONFIG['project_catalog']['project']
     )
 
+    # build partition input
     with Client(n_workers=2, threads_per_worker=5, memory_limit="30GB",**daskkws):
+        level_part = f"partition-ensemble{ens_name}"
 
         # extract
-        # dont use to_dataset_dict because with large domain, you need to open from cat
+        # don't use to_dataset_dict because with large domain, you need to open from cat
         subcat = pcat.search(processing_level='indicators',
-                             domain='QC-reg1',
-                             source=CONFIG['source'],
-                             reference=CONFIG['reference'])
+                             domain=domain,
+                             **CONFIG['ensemble'][ens_name])
 
         # build partition input
         ens_part = xs.ensembles.build_partition_data(
             subcat,
             partition_dim=["source", "experiment", "method", 'reference'],
             to_dataset_kw=CONFIG['tdd'],
-            to_level="partition-ensemble84"
+            to_level=level_part
         )
 
         for var in ens_part.data_vars:
-            if not pcat.exists_in_cat(processing_level="partition-ensemble84",
-                                      variable=var, domain='QC-reg1'):
-                print(f"Computing partition-ensemble84 {var}")
+            if not pcat.exists_in_cat(processing_level=level_part,
+                                      variable=var, domain=domain):
+                print(f"Computing {level_part} {var}")
                 out = ens_part[[var]]
                 out.attrs['cat:variable'] = var
-                out = out.chunk({'time':-1,'model':-1, 'scenario':-1, 'method':-1, 'reference':-1,
-                                 "lat":10, "lon":10})
+                out = out.chunk({'time': -1, 'model': -1, 'scenario': -1, 'method': -1,
+                                 'reference': -1, "lat": 10, "lon": 10})
                 xs.save_and_update(out, pcat, CONFIG['paths']['output'])
 
+    # compute uncertainties
     with Client(n_workers=2, threads_per_worker=3, memory_limit="30GB", **daskkws):
+        level_un = f"uncertainties{ens_name}"
 
+        for var in ens_part.data_vars:
+            if not pcat.exists_in_cat(processing_level=level_un, variable=var,
+                                      domain=domain):
+                print(f"Computing {level_un} {var}")
+                ens_part = pcat.search(processing_level=level_part,
+                                       variable=var,
+                                       domain=domain
+                                       ).to_dataset(**CONFIG['tdd'])
 
-
-        #for var in ens_part.data_vars:
-        for var in ['r20mm']:
-            if not pcat.exists_in_cat(processing_level="uncertainties84", variable=var,
-                                      domain='QC-reg1'):
-                print(f"Computing uncertainties84 {var}")
-                ens_part = pcat.search(processing_level="partition-ensemble84",
-                                                 variable=var,
-                                                 domain='QC-reg1').to_dataset(**CONFIG['tdd'])
-
-                #ens_part=ens_part.chunk({'lat':5, 'lon':5})
-                print(ens_part)
                 mean, uncertainties = xc.ensembles.general_partition(ens_part[var])
                 uncertainties = uncertainties.to_dataset(name=var)
                 uncertainties.attrs = ens_part.attrs
-                uncertainties.attrs['cat:processing_level'] = "uncertainties84"
+                uncertainties.attrs['cat:processing_level'] = level_un
                 uncertainties.attrs['cat:variable'] = var
-                print(uncertainties)
                 xs.save_and_update(ds=uncertainties,
                                    pcat=pcat,
                                    path=CONFIG['paths']['output'],

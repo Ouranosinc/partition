@@ -42,11 +42,34 @@ if __name__ == '__main__':
         project=CONFIG['project_catalog']['project']
     )
 
+    # add reference and method to the catalog
+    # this could have been done in indicators.py, but I thought of it too late.
+    df = pcat.df.copy()
+    pcat.df['method'] = df.apply(add_col, axis=1,
+                                 d={'ESPO-G6': 'ESPO-G6',
+                                    'IC6': 'IC6',
+                                    'CanDCS-U6': 'BCCAQv2',
+                                    'CanDCS-M6': 'MBCn',
+                                    'NEX': 'NEX-GDDP',
+                                    'MBCn': 'MBCn',
+                                    'BCCAQv2': 'BCCAQv2'})
+    pcat.df['reference'] = df.apply(add_col, axis=1,
+                                    d={'R2': 'CaSRv2.1',
+                                       'E5L': 'ERA5-Land',
+                                       'EM': 'EMDNA',
+                                       'CanDCS-M6': 'PCICBlend',
+                                       'PB': 'PCICBlend',
+                                       'CanDCS-U6': 'NRCANmet',
+                                       'N2014': 'NRCANmet',
+                                       'NEX': 'GMFD'})
+    pcat.update()
+
     with Client(n_workers=3, threads_per_worker=5, memory_limit="8GB",**daskkws):
+        domain ='QC-reg1c'
 
         # create regular grid
         ds_grid = xesmf.util.cf_grid_2d(-83, -55, 0.1, 42, 63, 0.1)
-        ds_grid['mask']=xr.open_zarr(CONFIG['paths']['base'] / 'mask.zarr')
+        ds_grid['mask']=xr.open_zarr(f"{CONFIG['paths']['base']}mask.zarr")['mask']
 
         # include variable in groupby_attrs
         original_groupby_attributes = pcat.esmcat.aggregation_control.groupby_attrs
@@ -55,26 +78,29 @@ if __name__ == '__main__':
 
         # load input
         dict_input = pcat.search(processing_level="indicators",
+                                 source=CONFIG['source'],
+                                 reference=CONFIG['reference'],
                                  domain='QC').to_dataset_dict(**tdd)
-
 
         for id, ds in dict_input.items():
             var = list(ds.data_vars)[0]
-            if not pcat.exists_in_cat(id=id.split('.')[0],domain='QC-reg1c',
+            if not pcat.exists_in_cat(id=id.split('.')[0],domain=domain,
                                       variable=var, processing_level="indicators",):
-                logger.info(f'Regrid {id} {var}')
+                print(f'Regrid {domain} {id} {var}')
 
                 out = xs.regrid_dataset( ds=ds[[var]], ds_grid= ds_grid,
                                          to_level=ds.attrs['cat:processing_level']  )
 
-                out.attrs['cat:domain'] = 'QC-reg1c'
+                out.attrs['cat:domain'] = domain
 
-                #drop vestigial coords
+                # drop vestigial coords
                 out = out.drop_vars('rotated_pole', errors='ignore')
 
                 # for cf
                 out.lat.attrs['axis'] = 'Y'
                 out.lon.attrs['axis'] = 'X'
+
+                out = out.drop_vars(['lat_bounds','lon_bounds'], errors='ignore')
 
                 xs.save_and_update(ds=out,
                                    pcat=pcat,
@@ -83,24 +109,4 @@ if __name__ == '__main__':
                                        rechunk={'time': -1, 'X': 50, 'Y': 50})
                                    )
 
-        # add reference and method to the catalog
-        df = pcat.df.copy()
-        pcat.df['method'] = df.apply(add_col, axis=1,
-                                     d={'ESPO-G6': 'ESPO-G6',
-                                       'IC6': 'IC6',
-                                       'CanDCS-U6': 'BCCAQv2',
-                                       'CanDCS-M6': 'MBCn',
-                                       'NEX': 'NEX-GDDP',
-                                       'MBCn': 'MBCn',
-                                       'BCCAQv2': 'BCCAQv2'})
-        pcat.df['reference'] = df.apply(add_col, axis=1,
-                                        d={'R2': 'CaSRv2.1',
-                                           'E5L': 'ERA5-Land',
-                                           'EM': 'EMDNA',
-                                           'CanDCS-M6': 'PCICBlend',
-                                           'PB': 'PCICBlend',
-                                           'CanDCS-U6': 'NRCANmet',
-                                           'N2014': 'NRCANmet',
-                                           'NEX': 'GMFD'})
-        pcat.update()
 

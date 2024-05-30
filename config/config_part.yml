@@ -5,22 +5,6 @@ project_catalog:
         title: partition_cat
         description: partition_cat
 
-source: &source
-    - ACCESS-ESM1-5
-    - CanESM5
-    - EC-Earth3
-    - FGOALS-g3
-    - IPSL-CM6A-LR
-    - KACE-1-0-G
-    - MIROC6
-    - MRI-ESM2-0
-
-reference:
-    - CaSRv2.1
-    - ERA5-Land
-    - PCICBlend
-    - NRCANmet
-
 extract:
     search_data_catalogs:
         variables_and_freqs:
@@ -41,27 +25,32 @@ extract:
         other_search_criteria:
             processing_level:
                 - biasadjusted
-            source: *source
+            source:
+                - ACCESS-ESM1-5
+                - CanESM5
+                - EC-Earth3
+                - FGOALS-g3
+                - IPSL-CM6A-LR
+                - KACE-1-0-G
+                - MIROC6
+                - MRI-ESM2-0
             bias_adjust_project:
                 - CanDCS-U6 # cheat because we want to use the zarr version in other cat.
                 - CanDCS-M6
                 - ESPO-G6-R2
                 - ESPO-G6-E5L
                 - ESPO-G6-PB
+                - ESPO-G6-EM
                 - IC6-R2
                 - IC6-E5L
                 - IC6-EM
                 - IC6-PB
                 - IC6-N2014
-                - NEX-GDDP-CMIP6
+                #- NEX-GDDP-CMIP6
                 - MBCn-E5L
                 - MBCn-R2
                 - BCCAQv2-E5L
                 - BCCAQv2-R2
-#            member:
-#                - r1i1p1f1
-#                - r1i1p1f2
-#                - r1i1p1f3
     extract_dataset:
 #        region: # can't pass it directly bc of PCIC R2 lacking lat and lon
 #            name: QC
@@ -77,7 +66,6 @@ extract:
                 - time_bnds
                 - lat_bnds
                 - lon_bnds
-            #chunks: ??
 
 region:
     name: QC
@@ -90,7 +78,6 @@ regrid:
         regridder_kwargs:
             method: conservative_normed #bilinear used for regrid QC-reg1
             unmapped_to_nan: True
-            #extrap_method: inverse_dist
             output_chunks:
                 lat: 50
                 lon: 50
@@ -102,6 +89,67 @@ gridpoints:
         method: gridpoint
         lat: [45.5]
         lon: [-73.6]
+    gas:
+        name: gas
+        method: gridpoint
+        lat: [48.8]
+        lon: [-64.5]
+    chi:
+        name: chi
+        method: gridpoint
+        lat: [48.4]
+        lon: [-71.1]
+
+
+ensembles:
+    84:
+        source:
+            - ACCESS-ESM1-5
+            - CanESM5
+            - EC-Earth3
+            - FGOALS-g3
+            - IPSL-CM6A-LR
+            - KACE-1-0-G
+            - MIROC6
+            - MRI-ESM2-0
+        reference:
+            - CaSRv2.1
+            - ERA5-Land
+            - PCICBlend
+            - NRCANmet
+        method:
+            - ESPO-G6
+            - IC6
+            - MBCn
+            - BCCAQv2
+        experiment:
+            - ssp126
+            - ssp245
+            - ssp370
+            - ssp585
+    73:
+        source: # no CanESM5
+            - ACCESS-ESM1-5
+            - EC-Earth3
+            - FGOALS-g3
+            - IPSL-CM6A-LR
+            - KACE-1-0-G
+            - MIROC6
+            - MRI-ESM2-0
+        reference: # no NRCANmet
+            - CaSRv2.1
+            - ERA5-Land
+            - PCICBlend
+        method:
+            - ESPO-G6
+            - IC6
+            - MBCn
+            - BCCAQv2
+        experiment:
+            - ssp126
+            - ssp245
+            - ssp370
+            - ssp585
 
 io:
     save_to_zarr:
