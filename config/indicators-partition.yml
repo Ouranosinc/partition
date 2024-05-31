@@ -44,5 +44,9 @@ indicators:
     base: heat_wave_total_length
     parameters:
       freq: YS
-  water_budget:
-    base: water_budget
+  solidprcptot:
+    base: solidprcptot
+    parameters:
+      freq: YS
+#  water_budget:
+#    base: water_budget_from_tas

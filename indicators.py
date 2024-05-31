@@ -1,16 +1,17 @@
 """ compute indicators for partition """
 import os
 from pathlib import Path
+
 if 'ESMFMKFILE' not in os.environ:
     os.environ['ESMFMKFILE'] = str(Path(os.__file__).parent.parent / 'esmf.mk')
 import xscen as xs
 from dask.distributed import Client
 import atexit
 import xarray as xr
+from xscen import CONFIG
 
 path = 'config/path_part.yml'
 config = 'config/config_part.yml'
-from xscen import CONFIG
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
 
 if __name__ == '__main__':
@@ -33,7 +34,7 @@ if __name__ == '__main__':
         for did, dc in dict_sim.items():
             *_, last = mod.iter_indicators()
             if not pcat.exists_in_cat(id=did, variable=last[0], xrfreq='YS-JAN',
-                                      processing_level="indicators",):
+                                      processing_level="indicators", ):
                 print('Computing indicators for ', did)
                 chunks = {'rlat': 50, 'rlon': 50, 'time': 1460} if 'R2' in did else {
                     'lat': 50, 'lon': 50, 'time': 1460}
@@ -43,22 +44,22 @@ if __name__ == '__main__':
                     ds_ext = xs.extract_dataset(catalog=dc,
                                                 xr_open_kwargs={'chunks': chunks})['D']
 
-                    template=pcat.search(bias_adjust_project='ESPO-G6-R2',
-                                         variable='tg_mean', source='MIROC6',
-                                         experiment='ssp126', domain='QC').to_dataset()
+                    template = pcat.search(bias_adjust_project='ESPO-G6-R2',
+                                           variable='tg_mean', experiment='ssp126',
+                                           source='MIROC6', domain='QC').to_dataset()
 
                     if (template.rlat.drop_vars('rotated_pole').equals(ds_ext.rlat) and
                             template.rlon.drop_vars('rotated_pole').equals(ds_ext.rlon)):
                         ds_ext['rlat'] = template['rlat']
                         ds_ext['rlon'] = template['rlon']
-                        ds_ext=ds_ext.assign_coords(
+                        ds_ext = ds_ext.assign_coords(
                             {"lon": (('rlat', 'rlon'), template['lon'].data)})
                         ds_ext = ds_ext.assign_coords(
                             {"lat": (('rlat', 'rlon'), template['lat'].data)})
-                        ds_ext['lat'].attrs=template['lat'].attrs
+                        ds_ext['lat'].attrs = template['lat'].attrs
                         ds_ext['lon'].attrs = template['lon'].attrs
                     else:
-                        print('rlat/rlon of template are not the same as the extracted.')
+                        print('rlat/rlon of template are not the same as the dataset.')
                 else:
                     ds_ext = xs.extract_dataset(catalog=dc,
                                                 region=CONFIG['region'],
@@ -66,11 +67,10 @@ if __name__ == '__main__':
 
                 for name, ind in mod.iter_indicators():
                     # Get the freq and var names to check if they are already computed
-                    outfreq = ind.injected_parameters.get("freq", 'YS-JAN'
-                                                          ).replace('YS', 'YS-JAN')
+                    outfreq = ind.injected_parameters["freq"].replace('YS', 'YS-JAN')
                     outnames = [cfatt["var_name"] for cfatt in ind.cf_attrs]
                     if not pcat.exists_in_cat(id=did,
-                                              variable=outnames,xrfreq=outfreq,
+                                              variable=outnames, xrfreq=outfreq,
                                               processing_level="indicators", ):
 
                         _, ds_ind = xs.compute_indicators(
@@ -104,5 +104,3 @@ if __name__ == '__main__':
                                            save_kwargs=dict(
                                                rechunk={'time': -1, 'X': 50, 'Y': 50})
                                            )
-
-

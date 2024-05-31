@@ -21,7 +21,7 @@ dask.config.set({'logging.distributed.worker': 'error'})
 
 # choices
 domain = 'QC-reg1c'
-ens_name = '73'
+ens_name = CONFIG['ens_name']
 
 
 def add_col(row, d):
@@ -31,7 +31,7 @@ def add_col(row, d):
     if not isinstance(row['bias_adjust_project'], str):
         return np.nan
 
-    for k,v in d.items():
+    for k, v in d.items():
         if k in row['bias_adjust_project']:
             return v
 

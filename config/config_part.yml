@@ -103,8 +103,7 @@ gridpoints:
         lon: [-71.1]
 
 
-
-ensembles:
+ensemble:
     84:
         source:
             - ACCESS-ESM1-5
