@@ -21,7 +21,7 @@ domain = 'QC-reg1c'
 
 
 if __name__ == '__main__':
-    atexit.register(xs.send_mail_on_exit, subject=CONFIG['scripting']['subject'])
+    atexit.register(xs.send_mail_on_exit, subject="Partition maps")
     daskkws = CONFIG['dask'].get('client', {})
 
     # create project catalog

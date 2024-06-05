@@ -49,7 +49,7 @@ extract:
                 - IC6-PB
                 - IC6-N2014
                 #- NEX-GDDP-CMIP6
-                #- MBCn-E5L #TODO: temp
+                - MBCn-E5L
                 - MBCn-R2
                 - BCCAQv2-E5L
                 - BCCAQv2-R2
@@ -179,7 +179,6 @@ tdd:
     decode_timedelta: False
 
 scripting:
-    subject: Partition
     send_mail_on_exit:
         msg_ok: Toutes les étapes demandées ont été complétées.
         msg_err: Une erreur est survenue durant le traitement.

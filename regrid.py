@@ -37,7 +37,7 @@ def add_col(row, d):
 
 
 if __name__ == '__main__':
-    atexit.register(xs.send_mail_on_exit, subject=CONFIG['scripting']['subject'])
+    atexit.register(xs.send_mail_on_exit, subject="Partition regrid")
     daskkws = CONFIG['dask'].get('client', {})
     tdd = CONFIG['tdd']
 

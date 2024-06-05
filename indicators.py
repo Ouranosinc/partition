@@ -16,7 +16,7 @@ xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
 
 if __name__ == '__main__':
     daskkws = CONFIG['dask'].get('client', {})
-    atexit.register(xs.send_mail_on_exit, subject=CONFIG['scripting']['subject'])
+    atexit.register(xs.send_mail_on_exit, subject="Partition indicators")
 
     # create project catalog
     pcat = xs.ProjectCatalog(
@@ -45,7 +45,7 @@ if __name__ == '__main__':
                                                 xr_open_kwargs={'chunks': chunks})['D']
 
                     template = pcat.search(bias_adjust_project='ESPO-G6-R2',
-                                           variable='tg_mean', experiment='ssp126',
+                                           variable='tg_mean', experiment='ssp370',
                                            source='MIROC6', domain='QC').to_dataset()
 
                     if (template.rlat.drop_vars('rotated_pole').equals(ds_ext.rlat) and
@@ -66,12 +66,14 @@ if __name__ == '__main__':
                                                 xr_open_kwargs={'chunks': chunks})['D']
 
                 for name, ind in mod.iter_indicators():
+
                     # Get the freq and var names to check if they are already computed
                     outfreq = ind.injected_parameters["freq"].replace('YS', 'YS-JAN')
                     outnames = [cfatt["var_name"] for cfatt in ind.cf_attrs]
                     if not pcat.exists_in_cat(id=did,
                                               variable=outnames, xrfreq=outfreq,
                                               processing_level="indicators", ):
+                        print(name)
 
                         _, ds_ind = xs.compute_indicators(
                             ds=ds_ext,

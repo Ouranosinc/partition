@@ -20,7 +20,7 @@ ens_name = CONFIG['ens_name']
 domain = 'QC'
 
 if __name__ == '__main__':
-    atexit.register(xs.send_mail_on_exit, subject=CONFIG['scripting']['subject'])
+    atexit.register(xs.send_mail_on_exit, subject="Partition gridpoints")
     daskkws = CONFIG['dask'].get('client', {})
 
     # create project catalog
