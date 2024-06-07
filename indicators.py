@@ -1,7 +1,6 @@
 """ compute indicators for partition """
 import os
 from pathlib import Path
-
 if 'ESMFMKFILE' not in os.environ:
     os.environ['ESMFMKFILE'] = str(Path(os.__file__).parent.parent / 'esmf.mk')
 import xscen as xs
@@ -70,7 +69,7 @@ if __name__ == '__main__':
                     # Get the freq and var names to check if they are already computed
                     outfreq = ind.injected_parameters["freq"].replace('YS', 'YS-JAN')
                     outnames = [cfatt["var_name"] for cfatt in ind.cf_attrs]
-                    if not pcat.exists_in_cat(id=did,
+                    if not pcat.exists_in_cat(id=did, domain='QC',
                                               variable=outnames, xrfreq=outfreq,
                                               processing_level="indicators", ):
                         print(name)

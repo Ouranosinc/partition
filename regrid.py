@@ -5,19 +5,15 @@ if 'ESMFMKFILE' not in os.environ:
     os.environ['ESMFMKFILE'] = str(Path(os.__file__).parent.parent / 'esmf.mk')
 import xscen as xs
 from dask.distributed import Client
-import dask
 import xarray as xr
 import numpy as np
 import xesmf
-import logging
 from xscen import CONFIG
 import atexit
 
 path = 'config/path_part.yml'
 config = 'config/config_part.yml'
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
-logger = logging.getLogger('xscen')
-dask.config.set({'logging.distributed.worker': 'error'})
 
 # choices
 domain = 'QC-reg1c'
@@ -26,7 +22,7 @@ ens_name = CONFIG['ens_name']
 
 def add_col(row, d):
     """
-    Add a column based on the bias_adjust_project column and a dictionary of translations.
+    Add a column based on the bias_adjust_project column and a dict of translations.
     """
     if not isinstance(row['bias_adjust_project'], str):
         return np.nan
@@ -42,11 +38,7 @@ if __name__ == '__main__':
     tdd = CONFIG['tdd']
 
     # create project catalog
-    pcat = xs.ProjectCatalog(
-        CONFIG['project_catalog']['path'],
-        create=True,
-        project=CONFIG['project_catalog']['project']
-    )
+    pcat = xs.ProjectCatalog(CONFIG['project_catalog']['path'],)
 
     # add reference and method to the catalog
     # this could have been done in indicators.py, but I thought of it too late.
@@ -59,7 +51,7 @@ if __name__ == '__main__':
 
         # create regular grid
         ds_grid = xesmf.util.cf_grid_2d(-83, -55, 0.1, 42, 63, 0.1)
-        ds_grid['mask']=xr.open_zarr(f"{CONFIG['paths']['base']}mask.zarr")['mask']
+        ds_grid['mask'] = xr.open_zarr(f"{CONFIG['paths']['base']}mask.zarr")['mask']
 
         # include variable in groupby_attrs
         original_groupby_attributes = pcat.esmcat.aggregation_control.groupby_attrs
@@ -71,14 +63,14 @@ if __name__ == '__main__':
                                  domain='QC',
                                  **CONFIG['ensemble'][ens_name]).to_dataset_dict(**tdd)
 
-        for id, ds in dict_input.items():
+        for did, ds in dict_input.items():
             var = list(ds.data_vars)[0]
-            if not pcat.exists_in_cat(id=id.split('.')[0],domain=domain,
+            if not pcat.exists_in_cat(id=did.split('.')[0], domain=domain,
                                       variable=var, processing_level="indicators",):
-                print(f'Regrid {domain} {id} {var}')
+                print(f'Regrid {domain} {did} {var}')
 
-                out = xs.regrid_dataset( ds=ds[[var]], ds_grid= ds_grid,
-                                         to_level=ds.attrs['cat:processing_level'])
+                out = xs.regrid_dataset(ds=ds[[var]], ds_grid=ds_grid,
+                                        to_level=ds.attrs['cat:processing_level'])
 
                 out.attrs['cat:domain'] = domain
 

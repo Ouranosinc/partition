@@ -6,14 +6,12 @@ if 'ESMFMKFILE' not in os.environ:
 import xscen as xs
 from dask.distributed import Client
 import xclim as xc
-import logging
 from xscen import CONFIG
 import atexit
 
 path = 'config/path_part.yml'
 config = 'config/config_part.yml'
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
-logger = logging.getLogger('xscen')
 
 # choices
 ens_name = CONFIG['ens_name']
@@ -24,11 +22,7 @@ if __name__ == '__main__':
     daskkws = CONFIG['dask'].get('client', {})
 
     # create project catalog
-    pcat = xs.ProjectCatalog(
-        CONFIG['project_catalog']['path'],
-        create=True,
-        project=CONFIG['project_catalog']['project']
-    )
+    pcat = xs.ProjectCatalog(CONFIG['project_catalog']['path'],)
 
     with Client(n_workers=2, threads_per_worker=5, memory_limit="30GB", **daskkws):
         level_un = f"uncertainties{ens_name}"
@@ -48,10 +42,10 @@ if __name__ == '__main__':
             )
 
             for i, var in enumerate(ens_part.data_vars):
-                if not pcat.exists_in_cat(processing_level= level_un,
+                if not pcat.exists_in_cat(processing_level=level_un,
                                           variable=var, domain=point_name):
 
-                    #compute uncertainties per category
+                    # compute uncertainties per category
                     mean, uncertainties = xc.ensembles.general_partition(ens_part[var])
                     uncertainties = uncertainties.to_dataset(name=var)
                     uncertainties.attrs = ens_part.attrs
@@ -62,4 +56,3 @@ if __name__ == '__main__':
                                        pcat=pcat,
                                        path=CONFIG['paths']['output'],
                                        )
-

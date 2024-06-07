@@ -9,15 +9,12 @@ from dask.distributed import Client
 import dask
 import xarray as xr
 import xesmf
-import logging
 import atexit
 from xscen import CONFIG
 
 path = 'config/path_part.yml'
 config = 'config/config_part.yml'
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
-logger = logging.getLogger('xscen')
-dask.config.set({'logging.distributed.worker': 'error'})
 
 
 if __name__ == '__main__':
@@ -26,11 +23,7 @@ if __name__ == '__main__':
     tdd = CONFIG['tdd']
 
     # create project catalog
-    pcat = xs.ProjectCatalog(
-        CONFIG['project_catalog']['path'],
-        create=True,
-        project=CONFIG['project_catalog']['project']
-    )
+    pcat = xs.ProjectCatalog(CONFIG['project_catalog']['path'],)
 
     with Client(n_workers=3, threads_per_worker=5, memory_limit="8GB", **daskkws):
 
@@ -51,7 +44,7 @@ if __name__ == '__main__':
                                       variable=var, processing_level="indicators",):
                 logger.info(f'Regrid {did} {var} to find mask.')
 
-                out = xs.regrid_dataset( ds=ds[[var]], ds_grid=ds_grid,
+                out = xs.regrid_dataset(ds=ds[[var]], ds_grid=ds_grid,
                                          to_level=ds.attrs['cat:processing_level'])
 
                 out.attrs['cat:domain'] = 'QC-reg1c-mask'

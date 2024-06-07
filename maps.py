@@ -7,13 +7,11 @@ import xscen as xs
 from dask.distributed import Client
 import atexit
 import xclim as xc
-import logging
 from xscen import CONFIG
 
 path = 'config/path_part.yml'
 config = 'config/config_part.yml'
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
-logger = logging.getLogger('xscen')
 
 # choices
 ens_name = CONFIG['ens_name']
@@ -25,14 +23,9 @@ if __name__ == '__main__':
     daskkws = CONFIG['dask'].get('client', {})
 
     # create project catalog
-    pcat = xs.ProjectCatalog(
-        CONFIG['project_catalog']['path'],
-        create=True,
-        project=CONFIG['project_catalog']['project']
-    )
+    pcat = xs.ProjectCatalog(CONFIG['project_catalog']['path'],)
 
-    # build partition input
-    with Client(n_workers=2, threads_per_worker=5, memory_limit="30GB",**daskkws):
+    with Client(n_workers=2, threads_per_worker=5, memory_limit="30GB", **daskkws):
         level_part = f"partition-ensemble{ens_name}"
 
         # extract
@@ -81,4 +74,3 @@ if __name__ == '__main__':
                                    pcat=pcat,
                                    path=CONFIG['paths']['output'],
                                    )
-
