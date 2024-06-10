@@ -40,10 +40,10 @@ if __name__ == '__main__':
     # create project catalog
     pcat = xs.ProjectCatalog(CONFIG['project_catalog']['path'],)
 
-    # add reference and method to the catalog
+    # add reference and adjustment to the catalog
     # this could have been done in indicators.py, but I thought of it too late.
     df = pcat.df.copy()
-    pcat.df['method'] = df.apply(add_col, axis=1, d=CONFIG['translate']['method'])
+    pcat.df['adjustment'] = df.apply(add_col, axis=1, d=CONFIG['translate']['adjustment'])
     pcat.df['reference'] = df.apply(add_col, axis=1, d=CONFIG['translate']['reference'])
     pcat.update()
 

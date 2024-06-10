@@ -37,7 +37,7 @@ if __name__ == '__main__':
         # build partition input
         ens_part = xs.ensembles.build_partition_data(
             subcat,
-            partition_dim=["source", "experiment", "method", 'reference'],
+            partition_dim=["source", "experiment", "adjustment", 'reference'],
             to_dataset_kw=CONFIG['tdd'],
             to_level=level_part
         )
@@ -48,7 +48,7 @@ if __name__ == '__main__':
                 print(f"Computing {level_part} {var}")
                 out = ens_part[[var]]
                 out.attrs['cat:variable'] = var
-                out = out.chunk({'time': -1, 'model': -1, 'scenario': -1, 'method': -1,
+                out = out.chunk({'time': -1, 'model': -1, 'scenario': -1, 'adjustment': -1,
                                  'reference': -1, "lat": 10, "lon": 10})
                 xs.save_and_update(out, pcat, CONFIG['paths']['output'])
 

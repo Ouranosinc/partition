@@ -37,7 +37,7 @@ if __name__ == '__main__':
             # build partition input
             ens_part = xs.ensembles.build_partition_data(
                 datasets,
-                partition_dim=["source", "experiment", "method", 'reference'],
+                partition_dim=["source", "experiment", "adjustment", 'reference'],
                 subset_kw=point,
             )
 

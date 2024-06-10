@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
         # load input, on per ref
         dict_input = pcat.search(processing_level="indicators",
-                                 method='IC6',
+                                 adjustment='IC6',
                                  source='CanESM5',
                                  experiment='ssp245',
                                  variable='tg_mean',
