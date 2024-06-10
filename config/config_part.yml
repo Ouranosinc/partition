@@ -1,6 +1,6 @@
 # config  for partition project
 
-ens_name: 73
+ens_name: 74
 
 project_catalog:
     project:
@@ -19,9 +19,6 @@ extract:
         periods:
             - 1956
             - 2100
-#        exclusions:
-#            id:
-#             - NEX-GDDP-CMIP6_CMIP6_ScenarioMIP_KIOST_KIOST-ESM_ssp245_r1i1p1f1_QC # time is broken
         restrict_members:
             ordered: 1
         other_search_criteria:
@@ -37,7 +34,7 @@ extract:
                 - MIROC6
                 - MRI-ESM2-0
             bias_adjust_project:
-                - CanDCS-U6 # cheat because we want to use the zarr version in other cat.
+                - CanDCS-U6
                 - CanDCS-M6
                 - ESPO-G6-R2
                 - ESPO-G6-E5L
@@ -48,7 +45,6 @@ extract:
                 - IC6-EM
                 - IC6-PB
                 - IC6-N2014
-                #- NEX-GDDP-CMIP6
                 - MBCn-E5L
                 - MBCn-R2
                 - BCCAQv2-E5L
@@ -119,7 +115,7 @@ ensemble:
             - ERA5-Land
             - PCICBlend
             - NRCANmet
-        method:
+        adjustment:
             - ESPO-G6
             - IC6
             - MBCn
@@ -129,7 +125,7 @@ ensemble:
             - ssp245
             - ssp370
             - ssp585
-    73:
+    74:
         source: # no CanESM5
             - ACCESS-ESM1-5
             - EC-Earth3
@@ -142,7 +138,8 @@ ensemble:
             - CaSRv2.1
             - ERA5-Land
             - PCICBlend
-        method:
+            - EMDNA
+        adjustment:
             - ESPO-G6
             - IC6
             - MBCn
@@ -152,7 +149,7 @@ ensemble:
             - ssp370
 
 translate:
-    method:
+    adjustment:
         ESPO-G6: ESPO-G6
         IC6: IC6
         CanDCS-U6: BCCAQv2
