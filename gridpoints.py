@@ -42,9 +42,11 @@ if __name__ == '__main__':
             )
 
             for i, var in enumerate(ens_part.data_vars):
-                if not pcat.exists_in_cat(processing_level=level_un,
-                                          variable=var, domain=point_name):
+                if (not pcat.exists_in_cat(processing_level=level_un,
+                                           variable=var, domain=point_name) and
+                        var != 'heat_wave_total_length'): # TODO: tmp
 
+                    print(f"Computing {level_un} {var} for {point_name}")
                     # compute uncertainties per category
                     mean, uncertainties = xc.ensembles.general_partition(ens_part[var])
                     uncertainties = uncertainties.to_dataset(name=var)

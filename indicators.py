@@ -47,8 +47,10 @@ if __name__ == '__main__':
                                            variable='tg_mean', experiment='ssp370',
                                            source='MIROC6', domain='QC').to_dataset()
 
-                    if (template.rlat.drop_vars('rotated_pole').equals(ds_ext.rlat) and
-                            template.rlon.drop_vars('rotated_pole').equals(ds_ext.rlon)):
+                    if (template.rlat.drop_vars(
+                            'rotated_pole').equals(ds_ext.rlat) and
+                            template.rlon.drop_vars(
+                                'rotated_pole').equals(ds_ext.rlon)):
                         ds_ext['rlat'] = template['rlat']
                         ds_ext['rlon'] = template['rlon']
                         ds_ext = ds_ext.assign_coords(

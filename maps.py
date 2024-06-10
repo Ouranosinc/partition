@@ -34,6 +34,7 @@ if __name__ == '__main__':
                              domain=domain,
                              **CONFIG['ensemble'][ens_name])
 
+
         # build partition input
         ens_part = xs.ensembles.build_partition_data(
             subcat,
@@ -43,13 +44,14 @@ if __name__ == '__main__':
         )
 
         for var in ens_part.data_vars:
-            if not pcat.exists_in_cat(processing_level=level_part,
-                                      variable=var, domain=domain):
+            if (not pcat.exists_in_cat(processing_level=level_part,
+                                      variable=var, domain=domain)
+                    and var != 'heat_wave_total_length'):
                 print(f"Computing {level_part} {var}")
                 out = ens_part[[var]]
                 out.attrs['cat:variable'] = var
-                out = out.chunk({'time': -1, 'model': -1, 'scenario': -1, 'adjustment': -1,
-                                 'reference': -1, "lat": 10, "lon": 10})
+                out = out.chunk({'time': -1, 'model': -1, 'scenario': -1, "lon": 10,
+                                 'adjustment': -1, 'reference': -1, "lat": 10})
                 xs.save_and_update(out, pcat, CONFIG['paths']['output'])
 
     # compute uncertainties
