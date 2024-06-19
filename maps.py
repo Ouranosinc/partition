@@ -44,9 +44,8 @@ if __name__ == '__main__':
         )
 
         for var in ens_part.data_vars:
-            if (not pcat.exists_in_cat(processing_level=level_part,
-                                      variable=var, domain=domain)
-                    and var != 'heat_wave_total_length'):
+            if not pcat.exists_in_cat(processing_level=level_part,
+                                      variable=var, domain=domain):
                 print(f"Computing {level_part} {var}")
                 out = ens_part[[var]]
                 out.attrs['cat:variable'] = var
@@ -56,18 +55,22 @@ if __name__ == '__main__':
 
     # compute uncertainties
     with Client(n_workers=2, threads_per_worker=3, memory_limit="30GB", **daskkws):
-        level_un = f"uncertainties{ens_name}"
+        sm = 'poly'
+        level_un = f"uncertainties{ens_name}-{sm}"
 
         for var in ens_part.data_vars:
-            if not pcat.exists_in_cat(processing_level=level_un, variable=var,
-                                      domain=domain):
+            if (not pcat.exists_in_cat(processing_level=level_un, variable=var,
+                                      domain=domain)
+                    and True # var != 'heat_wave_total_length' and var != 'r20mm' #and var != 'tx_30'
+            ):
                 print(f"Computing {level_un} {var}")
                 ens_part = pcat.search(processing_level=level_part,
                                        variable=var,
                                        domain=domain
                                        ).to_dataset(**CONFIG['tdd'])
 
-                mean, uncertainties = xc.ensembles.general_partition(ens_part[var])
+                _, uncertainties = xc.ensembles.general_partition(ens_part[var], sm=sm)
+                uncertainties.attrs['partition_fit'] = sm
                 uncertainties = uncertainties.to_dataset(name=var)
                 uncertainties.attrs = ens_part.attrs
                 uncertainties.attrs['cat:processing_level'] = level_un

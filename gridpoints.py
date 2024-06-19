@@ -25,7 +25,8 @@ if __name__ == '__main__':
     pcat = xs.ProjectCatalog(CONFIG['project_catalog']['path'],)
 
     with Client(n_workers=2, threads_per_worker=5, memory_limit="30GB", **daskkws):
-        level_un = f"uncertainties{ens_name}"
+        sm = 'poly'
+        level_un = f"uncertainties{ens_name}-{sm}"
         # extract QC
         datasets = pcat.search(processing_level='indicators',
                                domain=domain,
@@ -42,13 +43,15 @@ if __name__ == '__main__':
             )
 
             for i, var in enumerate(ens_part.data_vars):
-                if (not pcat.exists_in_cat(processing_level=level_un,
-                                           variable=var, domain=point_name) and
-                        var != 'heat_wave_total_length'): # TODO: tmp
+                if not pcat.exists_in_cat(processing_level=level_un,
+                                           variable=var, domain=point_name):
 
                     print(f"Computing {level_un} {var} for {point_name}")
+
                     # compute uncertainties per category
-                    mean, uncertainties = xc.ensembles.general_partition(ens_part[var])
+                    _, uncertainties = xc.ensembles.general_partition(ens_part[var],
+                                                                      sm=sm)
+                    uncertainties.attrs['partition_fit'] = sm
                     uncertainties = uncertainties.to_dataset(name=var)
                     uncertainties.attrs = ens_part.attrs
                     uncertainties.attrs['cat:processing_level'] = level_un
