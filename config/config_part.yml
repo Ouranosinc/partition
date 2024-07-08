@@ -19,11 +19,14 @@ extract:
         periods:
             - 1956
             - 2100
+        coverage_kwargs:
+            coverage: 0 # skip test for reference
         restrict_members:
             ordered: 1
         other_search_criteria:
             processing_level:
                 - biasadjusted
+                - extracted
             source:
                 - ACCESS-ESM1-5
                 - CanESM5
@@ -33,6 +36,11 @@ extract:
                 - KACE-1-0-G
                 - MIROC6
                 - MRI-ESM2-0
+                # refs
+                - PCICBlend
+                - ERA5-Land
+                - EMDNA
+                - RDRS
             bias_adjust_project:
                 - CanDCS-U6
                 - CanDCS-M6
@@ -49,6 +57,7 @@ extract:
                 - MBCn-R2
                 - BCCAQv2-E5L
                 - BCCAQv2-R2
+                - reference
     extract_dataset:
 #        region: # can't pass it directly bc of PCIC R2 lacking lat and lon
 #            name: QC

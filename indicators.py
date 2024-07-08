@@ -61,6 +61,10 @@ if __name__ == '__main__':
                         ds_ext['lon'].attrs = template['lon'].attrs
                     else:
                         print('rlat/rlon of template are not the same as the dataset.')
+                elif 'reference' in did:
+                    ds_ext = xs.extract_dataset(catalog=dc,
+                                                xr_open_kwargs={'chunks': chunks})['D']
+                    ds_ext = xs.utils.unstack_fill_nan(ds_ext)
                 else:
                     ds_ext = xs.extract_dataset(catalog=dc,
                                                 region=CONFIG['region'],

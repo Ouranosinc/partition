@@ -61,7 +61,8 @@ if __name__ == '__main__':
         # load input
         dict_input = pcat.search(processing_level="indicators",
                                  domain='QC',
-                                 **CONFIG['ensemble'][ens_name]).to_dataset_dict(**tdd)
+                                 #**CONFIG['ensemble'][ens_name]
+                                 ).to_dataset_dict(**tdd)
 
         for did, ds in dict_input.items():
             var = list(ds.data_vars)[0]
