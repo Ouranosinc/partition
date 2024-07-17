@@ -27,6 +27,7 @@ if __name__ == '__main__':
     with Client(n_workers=2, threads_per_worker=5, memory_limit="30GB", **daskkws):
         sm = 'poly'
         level_un = f"uncertainties{ens_name}-{sm}"
+        level_part = f"partition-ensemble{ens_name}"
         # extract QC
         datasets = pcat.search(processing_level='indicators',
                                domain=domain,
@@ -43,6 +44,16 @@ if __name__ == '__main__':
             )
 
             for i, var in enumerate(ens_part.data_vars):
+
+                if not pcat.exists_in_cat(processing_level=level_part,
+                                          variable=var, domain=domain):
+                    print(f"Computing {level_part} {var}")
+                    out = ens_part[[var]]
+                    out.attrs['cat:variable'] = var
+                    out = out.chunk({'time': -1, 'model': -1, 'scenario': -1,
+                                     'adjustment': -1, 'reference': -1})
+                    xs.save_and_update(out, pcat, CONFIG['paths']['output'])
+
                 if not pcat.exists_in_cat(processing_level=level_un,
                                            variable=var, domain=point_name):
 

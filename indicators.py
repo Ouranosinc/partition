@@ -64,7 +64,9 @@ if __name__ == '__main__':
                 elif 'reference' in did:
                     ds_ext = xs.extract_dataset(catalog=dc,
                                                 xr_open_kwargs={'chunks': chunks})['D']
-                    ds_ext = xs.utils.unstack_fill_nan(ds_ext)
+                    coords = CONFIG['coords'][ds_ext.attrs['cat:source']]
+                    ds_ext = xs.utils.unstack_fill_nan(ds_ext,
+                                                       coords=coords)
                 else:
                     ds_ext = xs.extract_dataset(catalog=dc,
                                                 region=CONFIG['region'],
