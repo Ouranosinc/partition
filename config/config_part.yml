@@ -1,6 +1,6 @@
 # config  for partition project
 
-ens_name: all
+ens_name: 74
 
 project_catalog:
     project:

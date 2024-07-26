@@ -54,15 +54,13 @@ if __name__ == '__main__':
                 xs.save_and_update(out, pcat, CONFIG['paths']['output'])
 
     # compute uncertainties
-    with Client(n_workers=2, threads_per_worker=3, memory_limit="30GB", **daskkws):
+    with Client(n_workers=2, threads_per_worker=5, memory_limit="30GB", **daskkws): #need 60 for all
         sm = 'poly'
         level_un = f"uncertainties{ens_name}-{sm}"
 
         for var in ens_part.data_vars:
-            if (not pcat.exists_in_cat(processing_level=level_un, variable=var,
-                                      domain=domain)
-                    and True # var != 'heat_wave_total_length' and var != 'r20mm' #and var != 'tx_30'
-            ):
+            if not pcat.exists_in_cat(processing_level=level_un, variable=var,
+                                      domain=domain):
                 print(f"Computing {level_un} {var}")
                 ens_part = pcat.search(processing_level=level_part,
                                        variable=var,

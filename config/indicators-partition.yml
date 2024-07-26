@@ -50,3 +50,11 @@ indicators:
       freq: YS
 #  water_budget:
 #    base: water_budget_from_tas
+#  tx_mean:
+#    base: tx_mean
+#    parameters:
+#      freq: YS
+#  tn_mean:
+#    base: tn_mean
+#    parameters:
+#      freq: YS
