@@ -56,7 +56,7 @@ if __name__ == '__main__':
     # compute uncertainties
     with Client(n_workers=2, threads_per_worker=5, memory_limit="30GB", **daskkws): #need 60 for all
         sm = 'poly'
-        level_un = f"uncertainties{ens_name}-{sm}"
+        level_un = f"uncertainties{ens_name}-{sm}-2015"
 
         for var in ens_part.data_vars:
             if not pcat.exists_in_cat(processing_level=level_un, variable=var,
@@ -66,6 +66,9 @@ if __name__ == '__main__':
                                        variable=var,
                                        domain=domain
                                        ).to_dataset(**CONFIG['tdd'])
+
+                # slice time
+                ens_part = ens_part.sel(time=slice('2015', '2100'))
 
                 _, uncertainties = xc.ensembles.general_partition(ens_part[var], sm=sm)
                 uncertainties.attrs['partition_fit'] = sm
