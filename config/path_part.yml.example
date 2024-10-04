@@ -1,0 +1,42 @@
+# secrets! for partition project
+TODO: replace with your own paths and rename path_part.yml
+
+dask:
+  client:
+    local_directory: EXEC_DIR/tmp
+    dashboard_address: XXXX
+
+project_catalog:
+  path: DIR/partition_cat.json
+
+paths:
+  base: DIR
+  indicators: DIR/indicators/{domain}/{bias_adjust_project}/{xrfreq}/{id}/{id}_{domain}_{processing_level}_{xrfreq}_{variable}.zarr
+  output: DIR/{processing_level}/{domain}/{id}_{domain}_{processing_level}_{xrfreq}_{variable}.zarr
+  figures : DIR/draft_figures/
+
+extract:
+    search_data_catalogs:
+        data_catalogs:
+           - OFFICIAL CATALOG
+           - HOME-MADE CATALOG FROM create_ic6_input_ca.ipynb
+
+
+indicators:
+  module: config/indicators-partition.yml
+
+
+regrid:
+  regrid_dataset:
+    weights_location: EXEC-DIR/tmp
+
+scripting:
+    send_mail:
+        to: EMAIL
+
+coords:
+  RDRS: COORDS-NETCDF
+  EMDNA: COORDS-NETCDF
+  ERA5-Land: COORDS-NETCDF
+  PCICBlend: COORDS-NETCDF
+
