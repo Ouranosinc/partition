@@ -6,7 +6,6 @@ if 'ESMFMKFILE' not in os.environ:
 import xscen as xs
 from dask.distributed import Client
 import xarray as xr
-import numpy as np
 import xesmf
 from xscen import CONFIG
 import atexit
