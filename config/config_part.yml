@@ -1,6 +1,6 @@
 # config  for partition project
 
-ens_name: 74
+ens_name: 7442
 
 project_catalog:
     project:
@@ -101,15 +101,15 @@ gridpoints:
         method: gridpoint
         lat: [48.8]
         lon: [-64.5]
-    chi:
-        name: chi
+    sag:
+        name: sag
         method: gridpoint
         lat: [48.4]
         lon: [-71.1]
 
 
 ensemble:
-    all:
+    8444:
         source:
             - ACCESS-ESM1-5
             - CanESM5
@@ -134,7 +134,7 @@ ensemble:
             - ssp245
             - ssp370
             - ssp585
-    74:
+    7442:
         source: # no CanESM5
             - ACCESS-ESM1-5
             - EC-Earth3

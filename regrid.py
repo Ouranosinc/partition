@@ -20,16 +20,7 @@ domain = 'QC-reg1c'
 ens_name = CONFIG['ens_name']
 
 
-def add_col(row, d):
-    """
-    Add a column based on the bias_adjust_project column and a dict of translations.
-    """
-    if not isinstance(row['bias_adjust_project'], str):
-        return np.nan
 
-    for k, v in d.items():
-        if k in row['bias_adjust_project']:
-            return v
 
 
 if __name__ == '__main__':
@@ -39,13 +30,6 @@ if __name__ == '__main__':
 
     # create project catalog
     pcat = xs.ProjectCatalog(CONFIG['project_catalog']['path'],)
-
-    # add reference and adjustment to the catalog
-    # this could have been done in indicators.py, but I thought of it too late.
-    df = pcat.df.copy()
-    pcat.df['adjustment'] = df.apply(add_col, axis=1, d=CONFIG['translate']['adjustment'])
-    pcat.df['reference'] = df.apply(add_col, axis=1, d=CONFIG['translate']['reference'])
-    pcat.update()
 
     with Client(n_workers=3, threads_per_worker=5, memory_limit="8GB", **daskkws):
 
@@ -61,7 +45,6 @@ if __name__ == '__main__':
         # load input
         dict_input = pcat.search(processing_level="indicators",
                                  domain='QC',
-                                 #**CONFIG['ensemble'][ens_name]
                                  ).to_dataset_dict(**tdd)
 
         for did, ds in dict_input.items():

@@ -8,10 +8,24 @@ from dask.distributed import Client
 import atexit
 import xarray as xr
 from xscen import CONFIG
+import numpy as np
 
 path = 'config/path_part.yml'
 config = 'config/config_part.yml'
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
+
+
+def add_col(row, d):
+    """
+    Add a column based on the bias_adjust_project column and a dict of translations.
+    """
+    if not isinstance(row['bias_adjust_project'], str):
+        return np.nan
+
+    for k, v in d.items():
+        if k in row['bias_adjust_project']:
+            return v
+
 
 if __name__ == '__main__':
     daskkws = CONFIG['dask'].get('client', {})
@@ -33,7 +47,7 @@ if __name__ == '__main__':
         for did, dc in dict_sim.items():
             *_, last = mod.iter_indicators()
             if not pcat.exists_in_cat(id=did, variable=last[0], xrfreq='YS-JAN',
-                                      processing_level="indicators", ):
+                                      processing_level="indicators", domain='QC'):
                 print('Computing indicators for ', did)
                 chunks = {'rlat': 50, 'rlon': 50, 'time': 1460} if 'R2' in did else {
                     'lat': 50, 'lon': 50, 'time': 1460}
@@ -113,3 +127,9 @@ if __name__ == '__main__':
                                            save_kwargs=dict(
                                                rechunk={'time': -1, 'X': 50, 'Y': 50})
                                            )
+    # add reference and adjustment to the catalog
+    # this could have been done in indicators.py, but I thought of it too late.
+    df = pcat.df.copy()
+    pcat.df['adjustment'] = df.apply(add_col, axis=1, d=CONFIG['translate']['adjustment'])
+    pcat.df['reference'] = df.apply(add_col, axis=1, d=CONFIG['translate']['reference'])
+    pcat.update()
