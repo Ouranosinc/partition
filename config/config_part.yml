@@ -1,6 +1,6 @@
 # config  for partition project
 
-ens_name: 7442
+ens_name: 7442m
 
 project_catalog:
     project:
@@ -55,6 +55,7 @@ extract:
                 - IC6-N2014
                 - MBCn-E5L
                 - MBCn-R2
+                - MBCn-EM
                 - BCCAQv2-E5L
                 - BCCAQv2-R2
                 - reference
@@ -96,16 +97,37 @@ gridpoints:
         method: gridpoint
         lat: [45.5]
         lon: [-73.6]
+#    sag:
+#        name: sag
+#        method: gridpoint
+#        lat: [ 48.4 ]
+#        lon: [ -71.1 ]
     gas:
         name: gas
         method: gridpoint
         lat: [48.8]
         lon: [-64.5]
-    sag:
-        name: sag
+#    kuu:
+#        name: kuu
+#        method: gridpoint
+#        lat: [ 58.1 ]
+#        lon: [ -68.4 ]
+#    pin:
+#        name: pin
+#        method: gridpoint
+#        lat: [ 61.4 ]
+#        lon: [ -73.7 ]
+#    sit:
+#        name: sit
+#        method: gridpoint
+#        lat: [ 58.8 ]
+#        lon: [ -75.0 ]
+    kaw:
+        name: kaw
         method: gridpoint
-        lat: [48.4]
-        lon: [-71.1]
+        lat: [ 54.9 ]
+        lon: [ -66.8 ]
+
 
 
 ensemble:
@@ -134,7 +156,7 @@ ensemble:
             - ssp245
             - ssp370
             - ssp585
-    7442:
+    7442m: # tentative with new mbcn
         source: # no CanESM5
             - ACCESS-ESM1-5
             - EC-Earth3
@@ -151,6 +173,27 @@ ensemble:
         adjustment:
             - ESPO-G6
             - IC6
+            - MBCn
+            - BCCAQv2
+        experiment:
+            - ssp245
+            - ssp370
+    7432:
+        source: # no CanESM5
+            - ACCESS-ESM1-5
+            - EC-Earth3
+            - FGOALS-g3
+            - IPSL-CM6A-LR
+            - KACE-1-0-G
+            - MIROC6
+            - MRI-ESM2-0
+        reference: # no NRCANmet
+            - CaSRv2.1
+            - ERA5-Land
+            - PCICBlend
+            - EMDNA
+        adjustment:
+            - ESPO-G6
             - MBCn
             - BCCAQv2
         experiment:

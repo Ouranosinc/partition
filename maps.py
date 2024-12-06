@@ -54,7 +54,7 @@ if __name__ == '__main__':
                 xs.save_and_update(out, pcat, CONFIG['paths']['output'])
 
     # compute uncertainties
-    with Client(n_workers=2, threads_per_worker=5, memory_limit="30GB", **daskkws): #need 60 for all
+    with Client(n_workers=2, threads_per_worker=5, memory_limit="60GB", **daskkws): #need 60 for all
         sm = 'poly'
         level_un = f"uncertainties{ens_name}-{sm}-2015"
 
