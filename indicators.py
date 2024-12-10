@@ -128,7 +128,6 @@ if __name__ == '__main__':
                                                rechunk={'time': -1, 'X': 50, 'Y': 50})
                                            )
     # add reference and adjustment to the catalog
-    # this could have been done in indicators.py, but I thought of it too late.
     df = pcat.df.copy()
     pcat.df['adjustment'] = df.apply(add_col, axis=1, d=CONFIG['translate']['adjustment'])
     pcat.df['reference'] = df.apply(add_col, axis=1, d=CONFIG['translate']['reference'])

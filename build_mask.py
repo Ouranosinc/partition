@@ -6,7 +6,6 @@ if 'ESMFMKFILE' not in os.environ:
     os.environ['ESMFMKFILE'] = str(Path(os.__file__).parent.parent / 'esmf.mk')
 import xscen as xs
 from dask.distributed import Client
-import dask
 import xarray as xr
 import xesmf
 import atexit
@@ -18,7 +17,7 @@ xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
 
 
 if __name__ == '__main__':
-    atexit.register(xs.send_mail_on_exit, subject=CONFIG['scripting']['subject'])
+    atexit.register(xs.send_mail_on_exit, subject='Build mask')
     daskkws = CONFIG['dask'].get('client', {})
     tdd = CONFIG['tdd']
 
@@ -42,7 +41,6 @@ if __name__ == '__main__':
             var = list(ds.data_vars)[0]
             if not pcat.exists_in_cat(id=did.split('.')[0], domain='QC-reg1c-mask',
                                       variable=var, processing_level="indicators",):
-                logger.info(f'Regrid {did} {var} to find mask.')
 
                 out = xs.regrid_dataset(ds=ds[[var]], ds_grid=ds_grid,
                                          to_level=ds.attrs['cat:processing_level'])

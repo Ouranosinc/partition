@@ -14,17 +14,7 @@ paths:
   indicators: DIR/indicators/{domain}/{bias_adjust_project}/{xrfreq}/{id}/{id}_{domain}_{processing_level}_{xrfreq}_{variable}.zarr
   output: DIR/{processing_level}/{domain}/{id}_{domain}_{processing_level}_{xrfreq}_{variable}.zarr
   figures : DIR/draft_figures/
-
-extract:
-    search_data_catalogs:
-        data_catalogs:
-           - OFFICIAL CATALOG
-           - HOME-MADE CATALOG FROM create_ic6_input_ca.ipynb
-
-
-indicators:
-  module: config/indicators-partition.yml
-
+  published_data: DIR_WHERE_YOU_DOWNLOADED_THE_DATA
 
 regrid:
   regrid_dataset:
@@ -34,9 +24,21 @@ scripting:
     send_mail:
         to: EMAIL
 
+
+# Below only for people at Ouranos or people starting from daily timeseries
+extract:
+    search_data_catalogs:
+        data_catalogs:
+           - OFFICIAL CATALOG
+           - HOME-MADE CATALOG FROM create_ic6_input_ca.ipynb
+
+indicators:
+  module: config/indicators-partition.yml
+
 coords:
   RDRS: COORDS-NETCDF
   EMDNA: COORDS-NETCDF
   ERA5-Land: COORDS-NETCDF
   PCICBlend: COORDS-NETCDF
+
 
