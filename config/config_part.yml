@@ -200,6 +200,7 @@ ensemble:
             - ssp245
             - ssp370
 
+# note that in  the paper ESPO-G6 was called DQM and IC6 was called DQM-EV
 translate:
     adjustment:
         ESPO-G6: ESPO-G6
