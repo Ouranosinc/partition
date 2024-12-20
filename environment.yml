@@ -1,4 +1,4 @@
-name: partition
+name: partition-env
 channels:
   - anaconda
   - conda-forge
@@ -298,7 +298,7 @@ dependencies:
       - entrypoints==0.4
       - fasteners==0.19
       - fastprogress==1.0.3
-      - figanos==0.3.1.dev7
+      - git+https://github.com/Ouranosinc/figanos.git
       - flox==0.8.9
       - fsspec==2023.9.2
       - geopandas==0.14.2
@@ -339,7 +339,6 @@ dependencies:
       - typing-extensions==4.9.0
       - urllib3==2.1.0
       - webencodings==0.5.1
-      - xclim==0.49.0
-      - xscen==0.9.0
+      - git+https://github.com/Ouranosinc/xclim.git@add_general_part
+      - git+https://github.com/Ouranosinc/xscen.git@improve_partition
       - zarr==2.16.1
-prefix: partition-env
