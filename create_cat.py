@@ -46,5 +46,5 @@ if __name__ == '__main__':
     pcat.update()
 
     # use mask from github if don't have it already
-    if os.exists('mask.zarr') and not os.exists(f"{CONFIG['paths']['base']}mask.zarr"):
+    if os.path.exists('mask.zarr') and not os.path.exists(f"{CONFIG['paths']['base']}mask.zarr"):
         sh.copytree('mask.zarr', f"{CONFIG['paths']['base']}mask.zarr")
