@@ -225,7 +225,6 @@ dependencies:
   - pytz=2023.3.post1=pyhd8ed1ab_0
   - pyyaml=6.0.1=py311h459d7ec_1
   - pyzmq=25.1.0=py311h6a678d5_0
-  - rdma-core=50.0=hd3aeb46_0
   - re2=2023.06.02=h2873b5e_0
   - readline=8.2=h8228510_1
   - requests=2.31.0=pyhd8ed1ab_0
@@ -281,6 +280,9 @@ dependencies:
   - zstandard=0.22.0=py311haa97af0_0
   - zstd=1.5.5=hfc55251_0
   - pip:
+      - git+https://github.com/Ouranosinc/xclim.git@add_general_part
+      - git+https://github.com/Ouranosinc/xscen.git@improve-partition
+      - git+https://github.com/Ouranosinc/figanos.git@enumerate
       - annotated-types==0.6.0
       - appdirs==1.4.4
       - asciitree==0.3.3
@@ -298,7 +300,6 @@ dependencies:
       - entrypoints==0.4
       - fasteners==0.19
       - fastprogress==1.0.3
-      - git+https://github.com/Ouranosinc/figanos.git
       - flox==0.8.9
       - fsspec==2023.9.2
       - geopandas==0.14.2
@@ -339,6 +340,4 @@ dependencies:
       - typing-extensions==4.9.0
       - urllib3==2.1.0
       - webencodings==0.5.1
-      - git+https://github.com/Ouranosinc/xclim.git@add_general_part
-      - git+https://github.com/Ouranosinc/xscen.git@improve_partition
       - zarr==2.16.1
