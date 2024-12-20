@@ -6,6 +6,7 @@ if 'ESMFMKFILE' not in os.environ:
 import xscen as xs
 from xscen import CONFIG
 import numpy as np
+import shutil as sh
 path = 'config/path_part.yml'
 config = 'config/config_part.yml'
 xs.load_config(path, config, verbose=(__name__ == '__main__'), reset=True)
@@ -43,3 +44,7 @@ if __name__ == '__main__':
     pcat.df['adjustment'] = df.apply(add_col, axis=1, d=CONFIG['translate']['adjustment'])
     pcat.df['reference'] = df.apply(add_col, axis=1, d=CONFIG['translate']['reference'])
     pcat.update()
+
+    # use mask from github if don't have it already
+    if os.exists('mask.zarr') and not os.exists(f"{CONFIG['paths']['base']}mask.zarr"):
+        sh.copytree('mask.zarr', f"{CONFIG['paths']['base']}mask.zarr")
