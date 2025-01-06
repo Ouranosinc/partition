@@ -14,21 +14,22 @@ Last line needed for xscen branch.
 3. Fill in your paths in a path_part.yml file based on the path_part.yml.example file.
 4. Confirm choices (such as ens_name)  in config.yml.
 
-## Run the code 
+## Get Indicators ready
+If starting from annual indicators downloaded data (if you don't know, it's probably this one):
+    1. create_cat.py
+
 If starting from daily timeseries on the Ouranos server:
     0. create_ic6_input_cat.ipynb (private)
     1. indicators.py
     2. build_mask.py 
 
-If starting from annual indicators downloaded data (if you don't know, it's probably this one):
-    1. create_cat.py
 
+## Do analysis
 
-
-3. regrid.py
-4. gridpoints.py
-5. maps.py
-6. paper_figures.ipynb
+1. gridpoints.py 
+2. regrid.py
+3. maps.py
+4. paper_figures.ipynb
 
 
 #TODO: maybe put maks in zenodo instead.
