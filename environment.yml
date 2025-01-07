@@ -282,7 +282,7 @@ dependencies:
   - pip:
       - git+https://github.com/Ouranosinc/xclim.git@add_general_part
       - git+https://github.com/Ouranosinc/xscen.git@improve-partition
-      - git+https://github.com/Ouranosinc/figanos.git@enumerate
+      - git+https://github.com/Ouranosinc/figanos.git
       - annotated-types==0.6.0
       - appdirs==1.4.4
       - asciitree==0.3.3
