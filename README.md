@@ -5,7 +5,7 @@ Code for the paper "On the importance of the reference data: Uncertainty partiti
 1. Download data from https://doi.org/10.5281/zenodo.14397866 and unzip it.
 2. Create environnment
 ```
-conda env create -f environment.yml
+mamba env create -f environment.yml
 mamba activate partition-env
 pybabel compile -f -D xscen -d DIR/partition-env/lib/python3.11/site-packages/xscen/data 
 ```
