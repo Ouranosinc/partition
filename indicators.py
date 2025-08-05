@@ -45,8 +45,10 @@ if __name__ == '__main__':
         mod = xs.indicators.load_xclim_module(CONFIG["indicators"]["module"])
 
         for did, dc in dict_sim.items():
+            print(did)
             *_, last = mod.iter_indicators()
-            if not pcat.exists_in_cat(id=did, variable=last[0], xrfreq='YS-JAN',
+            if not pcat.exists_in_cat(id=[did, did.replace('QC','NAM')], # don't do QC version of nan version exists.
+                                      variable=last[0], xrfreq='YS-JAN',
                                       processing_level="indicators", domain='QC'):
                 print('Computing indicators for ', did)
                 chunks = {'rlat': 50, 'rlon': 50, 'time': 1460} if 'R2' in did else {

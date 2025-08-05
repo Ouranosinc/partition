@@ -32,4 +32,5 @@ If starting from daily timeseries on the Ouranos server:
 4. paper_figures.ipynb
 
 
-#TODO: maybe put maks in zenodo instead.
+#TODO: maybe put mask in zenodo instead.
+#TODO: do it when we add new models

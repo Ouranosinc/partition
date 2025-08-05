@@ -1,6 +1,6 @@
 # config  for partition project
 
-ens_name: 7442
+ens_name: 11444
 
 project_catalog:
     project:
@@ -36,29 +36,32 @@ extract:
                 - KACE-1-0-G
                 - MIROC6
                 - MRI-ESM2-0
+                - CNRM-CM6-1
+                - NorESM2-MM
+                - UKESM1-0-LL
                 # refs
                 - PCICBlend
                 - ERA5-Land
                 - EMDNA
                 - RDRS
             bias_adjust_project:
-                - CanDCS-U6
-                - CanDCS-M6
-                - ESPO-G6-R2
-                - ESPO-G6-E5L
-                - ESPO-G6-PB
-                - ESPO-G6-EM
-                - IC6-R2
-                - IC6-E5L
-                - IC6-EM
-                - IC6-PB
-                - IC6-N2014
-                - MBCn-E5L
-                - MBCn-R2
-                - MBCn-EM
-                - BCCAQv2-E5L
-                - BCCAQv2-R2
-                - reference
+                 - CanDCS-U6
+                 - CanDCS-M6
+                 - ESPO-G6-R2
+                 - ESPO-G6-E5L
+                 - ESPO-G6-PB
+                 - ESPO-G6-EM
+                 - IC6-R2
+                 - IC6-E5L
+                 - IC6-EM
+                 - IC6-PB
+                 - MBCn-E5L
+                 - MBCn-R2
+                 - MBCn-EM
+                 - MBCn-PB
+                 - BCCAQv2-E5L
+                 - BCCAQv2-R2
+                 - reference
     extract_dataset:
 #        region: # can't pass it directly bc of PCIC R2 lacking lat and lon
 #            name: QC
@@ -131,6 +134,61 @@ gridpoints:
 
 
 ensemble:
+    11444: # 592 datasets
+        source:
+            - ACCESS-ESM1-5
+            - CanESM5
+            - EC-Earth3
+            - FGOALS-g3
+            - IPSL-CM6A-LR
+            - KACE-1-0-G
+            - MIROC6
+            - MRI-ESM2-0
+            - CNRM-CM6-1
+            - NorESM2-MM
+            - UKESM1-0-LL
+        reference:
+            - CaSRv2.1
+            - ERA5-Land
+            - PCICBlend
+            - EMDNA
+        adjustment:
+            - ESPO-G6
+            - IC6
+            - MBCn
+            - BCCAQv2
+        experiment:
+            - ssp126
+            - ssp245
+            - ssp370
+            - ssp585
+    11443: #444 datasets
+        source:
+            - ACCESS-ESM1-5
+            - CanESM5
+            - EC-Earth3
+            - FGOALS-g3
+            - IPSL-CM6A-LR
+            - KACE-1-0-G
+            - MIROC6
+            - MRI-ESM2-0
+            - CNRM-CM6-1
+            - NorESM2-MM
+            - UKESM1-0-LL
+        reference:
+            - CaSRv2.1
+            - ERA5-Land
+            - PCICBlend
+            - EMDNA
+        adjustment:
+            - ESPO-G6
+            - IC6
+            - MBCn
+            - BCCAQv2
+        experiment:
+            - ssp245
+            - ssp370
+            - ssp585
     8444:
         source:
             - ACCESS-ESM1-5
@@ -178,6 +236,29 @@ ensemble:
         experiment:
             - ssp245
             - ssp370
+    7443: #294 datasets
+        source: # no CanESM5
+            - ACCESS-ESM1-5
+            - EC-Earth3
+            - FGOALS-g3
+            - IPSL-CM6A-LR
+            - KACE-1-0-G
+            - MIROC6
+            - MRI-ESM2-0
+        reference: # no NRCANmet
+            - CaSRv2.1
+            - ERA5-Land
+            - PCICBlend
+            - EMDNA
+        adjustment:
+            - ESPO-G6
+            - IC6
+            - MBCn
+            - BCCAQv2
+        experiment:
+            - ssp245
+            - ssp370
+            - ssp585
     7432:
         source: # no CanESM5
             - ACCESS-ESM1-5

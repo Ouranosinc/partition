@@ -52,6 +52,10 @@ if __name__ == '__main__':
                                       variable=var, processing_level="indicators",):
                 print(f'Regrid {domain} {did} {var}')
 
+                # fix mistake in MBCn-R2, axis are rlat, rlon, not lat, lon.
+                if 'MBCn-R2' in did: 
+                    del ds.lon.attrs['axis']
+                    del ds.lat.attrs['axis']
                 out = xs.regrid_dataset(ds=ds[[var]], ds_grid=ds_grid,
                                         to_level=ds.attrs['cat:processing_level'])
 
