@@ -6,8 +6,7 @@ Code for the paper "On the importance of the reference data: Uncertainty partiti
 2. Create environnment
 ```
 mamba env create -f environment.yml
-mamba activate partition-env
-pybabel compile -f -D xscen -d DIR/partition-env/lib/python3.11/site-packages/xscen/data 
+mamba activate partition
 ```
 Last line needed for xscen branch.
 
@@ -30,7 +29,3 @@ If starting from daily timeseries on the Ouranos server:
 2. regrid.py
 3. maps.py
 4. paper_figures.ipynb
-
-
-#TODO: maybe put mask in zenodo instead.
-#TODO: do it when we add new models

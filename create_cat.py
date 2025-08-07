@@ -45,6 +45,4 @@ if __name__ == '__main__':
     pcat.df['reference'] = df.apply(add_col, axis=1, d=CONFIG['translate']['reference'])
     pcat.update()
 
-    # use mask from github if don't have it already
-    if os.path.exists('mask.zarr') and not os.path.exists(f"{CONFIG['paths']['base']}mask.zarr"):
-        sh.copytree('mask.zarr', f"{CONFIG['paths']['base']}mask.zarr")
+    sh.copytree(f"{CONFIG['paths']['published_data']}/mask.zarr", f"{CONFIG['paths']['base']}mask.zarr")
