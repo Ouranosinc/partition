@@ -20,12 +20,21 @@ if __name__ == '__main__':
         project=CONFIG['project_catalog']['project']
     )
 
-    df = xs.catutils.parse_directory(directories=[CONFIG['paths']['published_data']],
-                                     patterns=['{bias_adjust_project}/{xrfreq}/{bias_adjust_project}_{mip_era}_{activity}_{institution}_{source}_{experiment}_{member}_{?}/{bias_adjust_project}_{mip_era}_{activity}_{institution}_{source}_{experiment}_{member}_{?}_{domain}_{processing_level}_{xrfreq}_{variable:_}.zarr',],
+    df = xs.catutils.parse_directory(directories=[f"{CONFIG['paths']['published_data']}/QC/"],
+                                     patterns=['{bias_adjust_project}_{mip_era}_{activity}_{institution}_{source}_{experiment}_{member}_{?}_{domain}_{processing_level}_{xrfreq}_{variable:_}.zarr',],
                                      homogenous_info={'date_start': '1950-01-01',
                                                       'date_end': '2100-12-31'}
                                      )
     pcat.update(df)
+
+    df = xs.catutils.parse_directory(directories=[f"{CONFIG['paths']['published_data']}/partition-ensemble11444/"],
+                                     patterns=['{domain}/{mip_era}_{activity}_{domain}_{domain}_{processing_level}_{xrfreq}_{variable}.zarr',],
+                                     homogenous_info={'date_start': '2015-01-01',
+                                                      'date_end': '2100-12-31'}
+                                     )
+    pcat.update(df)
+
+
 
 
     def add_col(row, d):
@@ -45,4 +54,6 @@ if __name__ == '__main__':
     pcat.df['reference'] = df.apply(add_col, axis=1, d=CONFIG['translate']['reference'])
     pcat.update()
 
+
+    # move mask
     sh.copytree(f"{CONFIG['paths']['published_data']}/mask.zarr", f"{CONFIG['paths']['base']}mask.zarr")

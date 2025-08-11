@@ -100,31 +100,11 @@ gridpoints:
         method: gridpoint
         lat: [45.5]
         lon: [-73.6]
-#    sag:
-#        name: sag
-#        method: gridpoint
-#        lat: [ 48.4 ]
-#        lon: [ -71.1 ]
     gas:
         name: gas
         method: gridpoint
         lat: [48.8]
         lon: [-64.5]
-#    kuu:
-#        name: kuu
-#        method: gridpoint
-#        lat: [ 58.1 ]
-#        lon: [ -68.4 ]
-#    pin:
-#        name: pin
-#        method: gridpoint
-#        lat: [ 61.4 ]
-#        lon: [ -73.7 ]
-#    sit:
-#        name: sit
-#        method: gridpoint
-#        lat: [ 58.8 ]
-#        lon: [ -75.0 ]
     kaw:
         name: kaw
         method: gridpoint
@@ -134,7 +114,7 @@ gridpoints:
 
 
 ensemble:
-    11444: # 592 datasets
+    11444: # This is the official one
         source:
             - ACCESS-ESM1-5
             - CanESM5
@@ -162,59 +142,59 @@ ensemble:
             - ssp245
             - ssp370
             - ssp585
-    11443: #444 datasets
-        source:
-            - ACCESS-ESM1-5
-            - CanESM5
-            - EC-Earth3
-            - FGOALS-g3
-            - IPSL-CM6A-LR
-            - KACE-1-0-G
-            - MIROC6
-            - MRI-ESM2-0
-            - CNRM-CM6-1
-            - NorESM2-MM
-            - UKESM1-0-LL
-        reference:
-            - CaSRv2.1
-            - ERA5-Land
-            - PCICBlend
-            - EMDNA
-        adjustment:
-            - ESPO-G6
-            - IC6
-            - MBCn
-            - BCCAQv2
-        experiment:
-            - ssp245
-            - ssp370
-            - ssp585
-    8444:
-        source:
-            - ACCESS-ESM1-5
-            - CanESM5
-            - EC-Earth3
-            - FGOALS-g3
-            - IPSL-CM6A-LR
-            - KACE-1-0-G
-            - MIROC6
-            - MRI-ESM2-0
-        reference:
-            - CaSRv2.1
-            - ERA5-Land
-            - PCICBlend
-            - EMDNA
-        adjustment:
-            - ESPO-G6
-            - IC6
-            - MBCn
-            - BCCAQv2
-        experiment:
-            - ssp126
-            - ssp245
-            - ssp370
-            - ssp585
-    7442:
+    # 11443: #444 datasets
+    #     source:
+    #         - ACCESS-ESM1-5
+    #         - CanESM5
+    #         - EC-Earth3
+    #         - FGOALS-g3
+    #         - IPSL-CM6A-LR
+    #         - KACE-1-0-G
+    #         - MIROC6
+    #         - MRI-ESM2-0
+    #         - CNRM-CM6-1
+    #         - NorESM2-MM
+    #         - UKESM1-0-LL
+    #     reference:
+    #         - CaSRv2.1
+    #         - ERA5-Land
+    #         - PCICBlend
+    #         - EMDNA
+    #     adjustment:
+    #         - ESPO-G6
+    #         - IC6
+    #         - MBCn
+    #         - BCCAQv2
+    #     experiment:
+    #         - ssp245
+    #         - ssp370
+    #         - ssp585
+    # 8444:
+    #     source:
+    #         - ACCESS-ESM1-5
+    #         - CanESM5
+    #         - EC-Earth3
+    #         - FGOALS-g3
+    #         - IPSL-CM6A-LR
+    #         - KACE-1-0-G
+    #         - MIROC6
+    #         - MRI-ESM2-0
+    #     reference:
+    #         - CaSRv2.1
+    #         - ERA5-Land
+    #         - PCICBlend
+    #         - EMDNA
+    #     adjustment:
+    #         - ESPO-G6
+    #         - IC6
+    #         - MBCn
+    #         - BCCAQv2
+    #     experiment:
+    #         - ssp126
+    #         - ssp245
+    #         - ssp370
+    #         - ssp585
+    7442: # this is the SI one
         source: # no CanESM5
             - ACCESS-ESM1-5
             - EC-Earth3
@@ -236,50 +216,50 @@ ensemble:
         experiment:
             - ssp245
             - ssp370
-    7443: #294 datasets
-        source: # no CanESM5
-            - ACCESS-ESM1-5
-            - EC-Earth3
-            - FGOALS-g3
-            - IPSL-CM6A-LR
-            - KACE-1-0-G
-            - MIROC6
-            - MRI-ESM2-0
-        reference: # no NRCANmet
-            - CaSRv2.1
-            - ERA5-Land
-            - PCICBlend
-            - EMDNA
-        adjustment:
-            - ESPO-G6
-            - IC6
-            - MBCn
-            - BCCAQv2
-        experiment:
-            - ssp245
-            - ssp370
-            - ssp585
-    7432:
-        source: # no CanESM5
-            - ACCESS-ESM1-5
-            - EC-Earth3
-            - FGOALS-g3
-            - IPSL-CM6A-LR
-            - KACE-1-0-G
-            - MIROC6
-            - MRI-ESM2-0
-        reference: # no NRCANmet
-            - CaSRv2.1
-            - ERA5-Land
-            - PCICBlend
-            - EMDNA
-        adjustment:
-            - ESPO-G6
-            - MBCn
-            - BCCAQv2
-        experiment:
-            - ssp245
-            - ssp370
+    # 7443: #294 datasets
+    #     source: # no CanESM5
+    #         - ACCESS-ESM1-5
+    #         - EC-Earth3
+    #         - FGOALS-g3
+    #         - IPSL-CM6A-LR
+    #         - KACE-1-0-G
+    #         - MIROC6
+    #         - MRI-ESM2-0
+    #     reference: # no NRCANmet
+    #         - CaSRv2.1
+    #         - ERA5-Land
+    #         - PCICBlend
+    #         - EMDNA
+    #     adjustment:
+    #         - ESPO-G6
+    #         - IC6
+    #         - MBCn
+    #         - BCCAQv2
+    #     experiment:
+    #         - ssp245
+    #         - ssp370
+    #         - ssp585
+    # 7432:
+    #     source: # no CanESM5
+    #         - ACCESS-ESM1-5
+    #         - EC-Earth3
+    #         - FGOALS-g3
+    #         - IPSL-CM6A-LR
+    #         - KACE-1-0-G
+    #         - MIROC6
+    #         - MRI-ESM2-0
+    #     reference: # no NRCANmet
+    #         - CaSRv2.1
+    #         - ERA5-Land
+    #         - PCICBlend
+    #         - EMDNA
+    #     adjustment:
+    #         - ESPO-G6
+    #         - MBCn
+    #         - BCCAQv2
+    #     experiment:
+    #         - ssp245
+    #         - ssp370
 
 # note that in  the paper ESPO-G6 was called DQM and IC6 was called DQM-EV
 translate:
